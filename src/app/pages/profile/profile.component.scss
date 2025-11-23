@@ -381,6 +381,11 @@
 
 }
 
+/* ← ESCONDE OS BOTÕES MOBILE NO DESKTOP */
+.mobile-actions {
+  display: none !important;
+}
+
 /* ============================================================
    📱 MOBILE — até 600px
    Ajuste completo: card, avatar mobile circular e responsividade
@@ -513,4 +518,38 @@
   .profile-wrapper.editing-password .mobile-avatar {
     display: none !important;
   }
+
+  .header-actions {
+    display: none !important;
+  }
+
+  .mobile-actions {
+    margin-top: 18px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .action-link {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+  }
+
+  .action-link.edit {
+    color: #6c00ff !important;
+  }
+
+  .action-link.delete {
+    color: #e03b3b !important;
+  }
+
 }

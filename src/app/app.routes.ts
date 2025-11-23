@@ -12,6 +12,8 @@ import { DashboardLayoutComponent } from './components/dashboard-layout/dashboar
 import { AuthGuard } from './service/auth-guard.service';
 
 import { PlaceholderComponent } from './pages/placeholder/placeholder.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { RepertoireComponent } from './pages/repertoire/repertoire.component';
 
 export const routes: Routes = [
 
@@ -27,7 +29,10 @@ export const routes: Routes = [
     path: "forgot-password",
     component: ForgotPasswordComponent
   },
-
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
+  },
   {
     path: "",
     component: DashboardLayoutComponent,
@@ -37,9 +42,9 @@ export const routes: Routes = [
         path: "dashboard",
         component: DashboardComponent
       },
-      {
-        path: "repertorios",
-        component: PlaceholderComponent
+        {
+        path: "repertoire",
+        component: RepertoireComponent
       },
       {
         path: "musicas",
@@ -50,7 +55,7 @@ export const routes: Routes = [
         component: PlaceholderComponent
       },
       {
-        path: "perfil",
+        path: "profile",
         component: ProfileComponent
       },
 

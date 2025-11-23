@@ -1,0 +1,101 @@
+<div class="repertorios-wrapper">
+  <h1>Repertórios</h1>
+
+  <button class="btn-add" (click)="openModal(false); $event.stopPropagation()">
+      + Criar Repertório
+  </button>
+
+
+  <div class="cards" cdkDropList (cdkDropListDropped)="drop($event)">
+    <div
+      class="card"
+      *ngFor="let rep of repertorios; let i = index"
+      cdkDrag
+      (click)="openRepertoire(rep.idRepertoire)"
+      [class.open]="openMenuIndex === i"
+    >
+
+      <div class="edit-icon" (click)="toggleMenu(i, $event)">
+        <i class="ph ph-pencil-simple-line"></i>
+      </div>
+
+      <h3>{{ rep.nameRepertoire }}</h3>
+      <p>{{ rep.totalBlocks || 0 }} blocos</p>
+
+      <!-- MENU -->
+      <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
+
+        <button class="dropdown-item" (click)="openRepertoire(rep.idRepertoire, $event)">
+          <i class="ph ph-browser"></i><span>Abrir</span>
+        </button>
+
+        <button class="dropdown-item" (click)="openModal(true, rep, $event)">
+          <i class="ph ph-pencil"></i>
+          <span>Editar</span>
+        </button>
+
+        <button class="dropdown-item"
+                [class.copied]="copiedId === rep.idRepertoire"
+                (click)="copyLink(rep.idRepertoire, $event)">
+          <i class="ph"
+            [class.ph-check-circle]="copiedId === rep.idRepertoire"
+            [class.ph-link]="copiedId !== rep.idRepertoire">
+          </i>
+
+          <span>{{ copiedId === rep.idRepertoire ? 'Link copiado!' : 'Copiar link' }}</span>
+        </button>
+
+
+        <button class="dropdown-item delete" (click)="deleteRepertoire(rep, $event)">
+          <i class="ph ph-trash"></i><span>Excluir</span>
+        </button>
+
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Overlays -->
+  <div class="menu-overlay" *ngIf="openMenuIndex !== null" (click)="openMenuIndex = null"></div>
+
+  <!-- ======================== -->
+  <!-- MODAL DE EXCLUSÃO        -->
+  <!-- ======================== -->
+  <div class="delete-overlay" *ngIf="deleteModalOpen" (click)="closeDeleteModal()"></div>
+
+  <div class="delete-modal" *ngIf="deleteModalOpen">
+    <h2>Excluir Repertório</h2>
+
+    <p class="msg">
+      Tem certeza que deseja excluir o repertório
+      <strong>"{{ repertoireToDelete?.nameRepertoire }}"</strong>?
+    </p>
+
+    <p class="warning">Essa ação é irreversível.</p>
+
+    <div class="delete-actions">
+      <button class="cancel" (click)="closeDeleteModal()">Cancelar</button>
+      <button class="delete" (click)="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY DO MODAL DE CRIAR/EDITAR -->
+<div class="overlay" *ngIf="modalOpen" (click)="closeModal()"></div>
+
+<!-- MODAL DE CRIAR / EDITAR -->
+<div class="modal" *ngIf="modalOpen" (click)="$event.stopPropagation()">
+  <h2>{{ editMode ? 'Editar Repertório' : 'Novo Repertório' }}</h2>
+
+  <form [formGroup]="form">
+    <input type="text" formControlName="nameRepertoire" placeholder="Nome do repertório" />
+  </form>
+
+  <div class="modal-actions">
+      <button class="cancel" (click)="closeModal()">Cancelar</button>
+      <button class="save" (click)="save()">Salvar</button>
+    </div>
+  </div>
+
+
+</div>

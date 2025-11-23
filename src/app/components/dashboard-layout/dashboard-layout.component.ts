@@ -39,6 +39,7 @@ export class DashboardLayoutComponent {
   logout() {
     document.body.classList.remove("dark-mode");
     sessionStorage.clear();
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 

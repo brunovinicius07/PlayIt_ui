@@ -25,9 +25,6 @@ export class LoginService {
       );
   }
 
-
-
-
   signup(nameUser: string, email: string, password: string, confirmNewPassword: string){
     return this.httpClient.post<LoginResponse>(
       this.apiUrl + "/register",
@@ -48,6 +45,14 @@ export class LoginService {
     return this.httpClient.put(
       this.apiUrl + "/forgotPassword",
       { email },
+      { responseType: 'text' as const }
+    );
+  }
+
+  resetPassword(data: any) {
+    return this.httpClient.put(
+      this.apiUrl + "/resetPassword",
+      data,
       { responseType: 'text' as const }
     );
   }

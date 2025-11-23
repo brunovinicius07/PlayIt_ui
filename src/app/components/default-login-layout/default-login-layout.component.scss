@@ -91,6 +91,42 @@ main {
     }
 }
 
+.success-toast {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7001FD;
+  color: #fff;
+  padding: 14px 26px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(112, 1, 253, 0.3);
+  z-index: 9999;
+  animation: fadeInToast 0.3s ease-out;
+  text-align: center;
+}
+
+/* DARK MODE */
+:host-context(.dark-mode) .success-toast {
+  background: #9b57ff;
+  color: #fff;
+}
+
+/* animação */
+@keyframes fadeInToast {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+
 /* --------------------------- */
 /*      MOBILE RESPONSIVE      */
 /* --------------------------- */
@@ -214,5 +250,5 @@ main {
         margin-top: 0 !important;
       }
     }
-    
+
 }

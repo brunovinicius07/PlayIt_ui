@@ -1,6 +1,6 @@
 <div class="profile-wrapper" [class.compacto]="showPasswordFields">
 
-  <!-- 🔥 AVATAR MOBILE — no topo do card -->
+  <!-- AVATAR MOBILE — no topo do card -->
   <div class="mobile-avatar" *ngIf="shouldShowAvatar()">
     <div class="avatar-wrapper">
       <img src="/assets/img/ro.jpg" class="avatar-mobile-img" />
@@ -45,6 +45,17 @@
       <div class="password-toggle" *ngIf="editMode">
         <input type="checkbox" id="changePassword" formControlName="changePassword" />
         <label for="changePassword">Alterar senha</label>
+      </div>
+
+      <!-- AÇÕES PARA MOBILE -->
+      <div class="mobile-actions" *ngIf="!editMode">
+        <button class="action-link edit" type="button" (click)="enableEditMode()">
+          <i class="ph ph-pencil-simple"></i> Editar Perfil
+        </button>
+
+        <button class="action-link delete" type="button" (click)="openDeleteModal()">
+          <i class="ph ph-trash"></i> Excluir Conta
+        </button>
       </div>
 
       <!-- Campos da senha -->
