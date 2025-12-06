@@ -91,11 +91,6 @@
     margin: 0 0 6px 0;
   }
 
-  .cdk-drag-preview {
-    width: 100% !important;
-    max-width: 100% !important;
-    border-radius: 18px;
-  }
 
   p {
     color: #bbb;
@@ -384,4 +379,15 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -48%); }
   to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.cdk-drag-placeholder {
+  height: 160px !important;
+  width: 100% !important;
+  border-radius: 18px;
+  opacity: 0 !important;
+}
+
+.cdk-drop-list.cdk-drop-list-dragging .card:not(.cdk-drag-placeholder) {
+  transition: transform 150ms ease;
 }
