@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./repertoire.component.scss']
 })
 export class RepertoireComponent implements OnInit {
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   form!: FormGroup;
   modalOpen = false;
@@ -75,10 +77,81 @@ export class RepertoireComponent implements OnInit {
     });
   }
 
+  onDrag(event: any) {
+    const container = document.querySelector('.scroll-container') as HTMLElement;
+    if (!container) return;
+
+    const pointerY = event.pointerPosition?.y;
+    const box = container.getBoundingClientRect();
+
+    const top = box.top + 80;
+    const bottom = box.bottom - 80;
+
+    if (pointerY < top) container.scrollTop -= 25;
+    else if (pointerY > bottom) container.scrollTop += 25;
+  }
+
+
   toggleMenu(i: number, event: MouseEvent) {
     event.stopPropagation();
-    this.openMenuIndex = this.openMenuIndex === i ? null : i;
+
+    const card = (event.currentTarget as HTMLElement).closest('.card') as HTMLElement;
+    const container = this.scrollContainer?.nativeElement as HTMLElement;
+
+    const isOpening = this.openMenuIndex !== i;
+    this.openMenuIndex = isOpening ? i : null;
+
+    if (!isOpening || !card || !container) return;
+
+    setTimeout(() => {
+      const menu = card.querySelector('.dropdown-menu') as HTMLElement;
+      if (!menu) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
+      const padding = 25;
+
+      // -------------------------------
+      // 🔥 1 - Ajusta caso o menu fique escondido EMBAIXO
+      // -------------------------------
+      if (menuRect.bottom > containerRect.bottom) {
+        const diff = menuRect.bottom - containerRect.bottom + padding;
+        container.scrollBy({ top: diff, behavior: 'smooth' });
+      }
+
+      // -------------------------------
+      // 🔥 2 - Ajusta caso o menu fique escondido EM CIMA
+      // -------------------------------
+      if (menuRect.top < containerRect.top) {
+        const diff = containerRect.top - menuRect.top + padding;
+        container.scrollBy({ top: -diff, behavior: 'smooth' });
+      }
+
+      // -------------------------------
+      // 🔥 3 - Ajuste EXTRA para sempre mostrar o card inteiro
+      // (isso que faltava!)
+      // -------------------------------
+      const cardRect = card.getBoundingClientRect();
+
+      if (cardRect.bottom > containerRect.bottom) {
+        container.scrollBy({
+          top: cardRect.bottom - containerRect.bottom + padding,
+          behavior: 'smooth'
+        });
+      }
+
+      if (cardRect.top < containerRect.top) {
+        container.scrollBy({
+          top: -(containerRect.top - cardRect.top + padding),
+          behavior: 'smooth'
+        });
+      }
+
+    }, 5);
   }
+
+
+
 
   openModal(edit = false, rep?: any, event?: MouseEvent) {
     event?.stopPropagation(); // 🔥 impede o click do card

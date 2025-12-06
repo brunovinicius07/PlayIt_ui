@@ -1,20 +1,37 @@
-/* container */
+/* ===== container geral ===== */
 .repertorios-wrapper {
-  padding: 30px;
-  padding-left: 60px;
+  padding: 30px 30px 10px 60px;
+  display: flex;
+  justify-content: center;
 }
 
-/* header */
-h1 {
+/* ===== CARDZÃO (BOARD) ===== */
+.board {
+  width: 100%;
+  max-width: 1100px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.09);
+  min-height: auto;
+}
+
+/* topo do board */
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* título */
+.board-header h1 {
   font-size: 32px;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 /* botão criar */
 .btn-add {
-  float: right;
-  margin-top: -55px;
   padding: 10px 25px;
   border-radius: 12px;
   background: #7c00ff;
@@ -25,17 +42,36 @@ h1 {
   transition: .3s;
 }
 
-/* cards layout */
-.cards {
-  margin-top: 60px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
+/* ===== área scrollável ===== */
+.scroll-container {
+  margin-top: 25px;
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  padding: 6px 8px 8px 0;
 }
 
-/* card */
+/* scrollbar */
+.scroll-container::-webkit-scrollbar { width: 8px; }
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #cfcfcf;
+  border-radius: 6px;
+}
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #b5b5b5;
+}
+
+/* lista de cards */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ===== CARD ===== */
 .card {
-  width: 340px;
+  width: 100%;
   height: 160px;
   border-radius: 18px;
   background: #232328;
@@ -44,7 +80,7 @@ h1 {
   position: relative;
   box-shadow: 0 6px 18px rgba(0,0,0,.18);
   transition: transform .2s, box-shadow .2s, z-index .01s;
-  z-index: 1; /* default */
+  z-index: 1;
 
   &:hover { transform: translateY(-4px); }
 
@@ -55,32 +91,33 @@ h1 {
     margin: 0 0 6px 0;
   }
 
+  .cdk-drag-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 18px;
+  }
+
   p {
     color: #bbb;
     margin-top: 10px;
   }
 }
 
-/* card que tem o menu aberto: traz para frente e aumenta sombra */
 .card.open {
   transform: translateY(-6px);
   z-index: 9999 !important;
   box-shadow: 0 18px 40px rgba(0,0,0,.35);
 }
 
-/* ícone de editar (lápis) — fixo canto superior direito */
+/* lápis */
 .edit-icon {
   position: absolute;
   top: 12px;
   right: 12px;
   font-size: 18px;
   color: rgba(255,255,255,0.85);
-  opacity: 0.9;
   cursor: pointer;
   z-index: 10010;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 6px;
   border-radius: 8px;
   transition: background .15s, color .15s;
@@ -91,21 +128,18 @@ h1 {
   }
 }
 
-/* POPOVER (container transparente — itens com cards próprios) */
+/* ===== DROPDOWN ===== */
 .dropdown-menu {
   position: absolute;
   top: 44px;
   right: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;               /* espaço ENTRE os itens */
-  background: transparent;  /* transparente para ver apenas os itens */
+  gap: 10px;
   padding: 6px;
   z-index: 10020;
-  pointer-events: auto;
 }
 
-/* CADA ITEM — visual “botão” separado */
 .dropdown-item {
   display: flex;
   align-items: center;
@@ -120,7 +154,6 @@ h1 {
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   transition: transform .08s, background .12s;
-  text-align: left;
 
   i {
     display: inline-flex;
@@ -147,59 +180,134 @@ h1 {
   }
 }
 
-/* estilo pequeno para o botão "Excluir" (opcional) */
 .dropdown-item.delete {
   color: #b71c1c;
-  i { background: #fff0f0; color: #b71c1c; }
+
+  i {
+    background: #fff0f0;
+    color: #b71c1c;
+  }
 }
 
-/* OVERLAY do modal (se quiser deixar o resto da tela apagado quando abrir menu) */
-.menu-screen-dim {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.15);
-  z-index: 10000;
-  pointer-events: none; /* não bloqueia clique: o clique em window already fecha menu */
+.dropdown-item.copied {
+  background: #dbffe4 !important;
+  border: 1px solid #2ecc71;
+  color: #1b8f4b;
+}
+.dropdown-item.copied i {
+  background: #2ecc71;
+  color: white;
 }
 
-/* MODAL de criar/editar (mantive o estilo) */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  z-index: 900;
-}
-.modal {
-  width: 420px;
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10030;
-  box-shadow: 0 12px 30px rgba(0,0,0,.25);
-
-  h2 { margin-bottom: 20px; }
-  input { width: 100%; border: 1px solid #ddd; padding: 14px; border-radius: 10px; font-size: 15px; }
-  input:focus { outline: 2px solid #7c00ff; }
-
-  .modal-actions { margin-top: 20px; display:flex; justify-content: space-between; }
-  .cancel { background:#ccc; padding:10px 22px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
-  .save { background:#7c00ff; padding:10px 22px; border-radius:10px; border:none; cursor:pointer; color:white; font-weight:600; }
-}
-
+/* overlay do menu */
 .menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);   /* Fica igual Trello */
-  backdrop-filter: blur(3px);     /* Desfoca o fundo */
-  z-index: 900;                   /* Fica acima dos cards, atrás do menu */
-  transition: opacity .2s ease;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 900;
+}
+
+/* ====================================================== */
+/* ===================== NOVO MODAL ===================== */
+/* ====================================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.48);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+}
+
+/* modal bonito */
+.modal {
+  width: 420px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 22px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10030;
+  box-shadow: 0 25px 55px rgba(0,0,0,0.25);
+  animation: fadeSlide .25s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translate(-50%, -46%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.modal-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
+  text-align: center;
+}
+
+.modal-form { width: 100%; }
+
+.modal-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e6e6e6;
+  border-radius: 14px;
+  font-size: 16px;
+  transition: .25s;
+
+  &:focus {
+    outline: none;
+    border-color: #7c00ff;
+    box-shadow: 0 0 0 3px rgba(124,0,255,0.15);
+  }
+}
+
+/* ações */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+/* cancelar */
+.btn-cancel {
+  background: #efefef;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: .25s;
+
+  &:hover { background: #e3e3e3; }
+}
+
+/* salvar */
+.btn-save {
+  background: #7c00ff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  transition: .25s;
+  box-shadow: 0 6px 18px rgba(124,0,255,0.25);
+
+  &:hover {
+    background: #6b00db;
+    box-shadow: 0 10px 26px rgba(124,0,255,0.35);
+  }
 }
 
 /* ===== MODAL DE EXCLUSÃO ===== */
-
 .delete-overlay {
   position: fixed;
   inset: 0;
@@ -241,11 +349,6 @@ h1 {
   color: #b00000;
 }
 
-.modal {
-  z-index: 3000 !important;
-}
-
-
 .delete-actions {
   margin-top: 25px;
   display: flex;
@@ -253,8 +356,8 @@ h1 {
   gap: 20px;
 }
 
-.delete-actions .cancel {
-  background: #ddd;
+.delete-actions .cancel,
+.delete-actions .delete {
   border: none;
   padding: 12px 26px;
   border-radius: 10px;
@@ -263,21 +366,17 @@ h1 {
   transition: 0.2s;
 }
 
+.delete-actions .cancel {
+  background: #ddd;
+}
 .delete-actions .cancel:hover {
   background: #ccc;
 }
 
 .delete-actions .delete {
   background: #e53935;
-  padding: 12px 26px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
   color: white;
-  cursor: pointer;
-  transition: 0.2s;
 }
-
 .delete-actions .delete:hover {
   background: #c62828;
 }
@@ -286,54 +385,3 @@ h1 {
   from { opacity: 0; transform: translate(-50%, -48%); }
   to   { opacity: 1; transform: translate(-50%, -50%); }
 }
-
-/* estado normal */
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-/* Ícone sempre */
-.dropdown-item i {
-  width: 30px;
-  height: 30px;
-  background: #f6f6f6;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 🔥 ESTILO QUANDO FOI COPIADO (igual ao Trello) */
-.dropdown-item.copied {
-  background: #dbffe4 !important;
-  border: 1px solid #2ecc71;
-  color: #1b8f4b;
-}
-
-.dropdown-item.copied i {
-  background: #2ecc71;
-  color: white;
-}
-/* Quando o modal abre, garante que nada fica na frente */
-.modal,
-.delete-modal {
-  position: fixed !important;
-  z-index: 999999 !important;
-}
-
-/* força todos os cards a ficarem atrás quando modal aberto */
-.modal-open .card,
-.modal-open .dropdown-menu,
-.modal-open .edit-icon {
-  z-index: 1 !important;
-}
-
-
