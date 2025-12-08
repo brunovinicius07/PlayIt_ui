@@ -13,57 +13,36 @@ import { AuthGuard } from './service/auth-guard.service';
 
 import { PlaceholderComponent } from './pages/placeholder/placeholder.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+
 import { RepertoireComponent } from './pages/repertoire/repertoire.component';
+import { BlockMusicComponent } from './pages/blockmusic/blockmusic.component';
+
 
 export const routes: Routes = [
 
-  {
-    path: "login",
-    component: LoginComponent
-  },
-  {
-    path: "signup",
-    component: SignupComponent
-  },
-  {
-    path: "forgot-password",
-    component: ForgotPasswordComponent
-  },
-  {
-    path: 'reset-password',
-    component: ResetPasswordComponent
-  },
+  { path: "login", component: LoginComponent },
+  { path: "signup", component: SignupComponent },
+  { path: "forgot-password", component: ForgotPasswordComponent },
+  { path: "reset-password", component: ResetPasswordComponent },
+
   {
     path: "",
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      {
-        path: "dashboard",
-        component: DashboardComponent
-      },
-        {
-        path: "repertoire",
-        component: RepertoireComponent
-      },
-      {
-        path: "musicas",
-        component: PlaceholderComponent
-      },
-      {
-        path: "agenda",
-        component: PlaceholderComponent
-      },
-      {
-        path: "profile",
-        component: ProfileComponent
-      },
+      { path: "dashboard", component: DashboardComponent },
 
-      // Redirecionamento padrão
+      { path: "repertoire", component: RepertoireComponent },
+
+      { path: "repertoire/:id/blockmusic", component: BlockMusicComponent },
+
+      { path: "musicas", component: PlaceholderComponent },
+      { path: "agenda", component: PlaceholderComponent },
+      { path: "profile", component: ProfileComponent },
+
       { path: "", redirectTo: "dashboard", pathMatch: "full" }
     ]
   },
 
-  // Página não encontrada
   { path: "**", redirectTo: "dashboard" }
 ];

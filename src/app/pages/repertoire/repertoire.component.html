@@ -21,6 +21,7 @@
         <div class="card"
             *ngFor="let rep of repertorios; let i = index"
             cdkDrag
+            [cdkDragDisabled]="openMenuIndex !== null"
             cdkDragLockAxis="y"
             cdkDragBoundary=".scroll-container"
             (cdkDragMoved)="onDrag($event)"
@@ -33,7 +34,7 @@
           </div>
 
           <h3>{{ rep.nameRepertoire }}</h3>
-          <p>{{ rep.totalBlocks || 0 }} blocos</p>
+          <p>{{ rep.totalBlocks }} blocos</p>
 
           <!-- menu -->
           <div class="dropdown-menu"

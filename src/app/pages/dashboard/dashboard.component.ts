@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,5 +10,12 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+
   userName = localStorage.getItem("username") || "Usuário";
+
+  constructor(private router: Router) {}
+
+  goToRepertoires() {
+    this.router.navigate(['/repertoire']);
+  }
 }

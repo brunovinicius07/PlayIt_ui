@@ -79,6 +79,7 @@ export class RepertoireComponent implements OnInit {
 
   onDrag(event: any) {
     const container = document.querySelector('.scroll-container') as HTMLElement;
+    if (this.openMenuIndex !== null) return;
     if (!container) return;
 
     const pointerY = event.pointerPosition?.y;
@@ -232,8 +233,9 @@ export class RepertoireComponent implements OnInit {
 
   openRepertoire(id: number, event?: MouseEvent) {
     if (event) event.stopPropagation();
-    this.router.navigate(['/repertoire', id]);
+    this.router.navigate(['/repertoire', id, 'blockmusic']);
   }
+
 
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.repertorios, event.previousIndex, event.currentIndex);
@@ -244,11 +246,18 @@ export class RepertoireComponent implements OnInit {
 
     this.repertoireService.getAll(idUser).subscribe({
       next: (data) => {
-        this.repertorios = data;
+
+        // 🔥 adiciona totalBlocks baseado no tamanho da lista
+        this.repertorios = data.map(rep => ({
+          ...rep,
+          totalBlocks: rep.idBlockMusics?.length || 0
+        }));
+
       },
       error: (err) => console.error("Erro ao carregar repertórios", err)
     });
   }
+
 
   copyLink(id: number, event?: MouseEvent) {
     event?.stopPropagation();

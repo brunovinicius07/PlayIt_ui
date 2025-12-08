@@ -1,0 +1,154 @@
+<div class="block-wrapper">
+
+  <div class="block-top-header">
+
+    <h1 class="rep-title">Repertório: {{ repertoireName }}</h1>
+
+    <button class="btn-back-2" (click)="goBack()">
+      <i class="ph ph-arrow-left"></i>
+      Voltar aos Repertórios
+    </button>
+
+  </div>
+
+  <div class="board">
+
+    <!-- Header -->
+    <div class="board-header">
+      <h1>Blocos</h1>
+
+      <button class="btn-add" (click)="openModal(false)">
+        + Criar Bloco
+      </button>
+    </div>
+
+    <!-- Scroll -->
+    <div class="scroll-container">
+
+      <div cdkDropList (cdkDropListDropped)="drop($event)" class="cards">
+
+        <div class="card"
+          *ngFor="let block of blocks; let i = index"
+          cdkDrag
+          (cdkDragMoved)="onDrag($event)"
+          [cdkDragDisabled]="openMenuIndex !== null"
+          cdkDragLockAxis="y"
+          (click)="0"
+          [class.open]="openMenuIndex === i">
+
+
+          <!-- Lápis -->
+          <div class="edit-icon" (click)="toggleMenu(i, $event)">
+            <i class="ph ph-pencil-simple-line"></i>
+          </div>
+
+          <h3>{{ block.nameBlockMusic }}</h3>
+          <p>{{ block.musics?.length || 0 }} músicas</p>
+
+          <!-- Menu -->
+          <div class="dropdown-menu"
+               *ngIf="openMenuIndex === i"
+               (click)="$event.stopPropagation()">
+
+            <!-- ABRIR -->
+            <button class="dropdown-item" (click)="openBlock(block.idBlockMusic, $event)">
+              <i class="ph ph-browser"></i> Abrir
+            </button>
+
+            <!-- EDITAR -->
+            <button class="dropdown-item" (click)="openModal(true, block, $event)">
+              <i class="ph ph-pencil"></i> Editar
+            </button>
+
+            <!-- COPIAR LINK -->
+            <button class="dropdown-item"
+                    [class.copied]="copiedId === block.idBlockMusic"
+                    (click)="copyLink(block.idBlockMusic, $event)">
+              <i class="ph"
+                [class.ph-check-circle]="copiedId === block.idBlockMusic"
+                [class.ph-link]="copiedId !== block.idBlockMusic"></i>
+              {{ copiedId === block.idBlockMusic ? 'Link copiado!' : 'Copiar link' }}
+            </button>
+
+            <!-- EXCLUIR -->
+            <button class="dropdown-item delete" (click)="delete(block, $event)">
+              <i class="ph ph-trash"></i> Excluir
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ====================================== -->
+  <!-- 🔥 OVERLAY GLOBAL DO MENU (CORRETO!)   -->
+  <!-- ====================================== -->
+  <div class="menu-overlay"
+       *ngIf="openMenuIndex !== null"
+       (click)="closeMenu()">
+  </div>
+
+
+  <!-- ====================================== -->
+  <!-- MODAL CRIAR/EDITAR -->
+  <!-- ====================================== -->
+  <div class="overlay" *ngIf="modalOpen" (click)="closeModal()"></div>
+
+  <div class="modal" *ngIf="modalOpen" (click)="$event.stopPropagation()">
+
+    <h2 class="modal-title">
+      {{ editMode ? 'Editar Bloco' : 'Novo Bloco' }}
+    </h2>
+
+    <form [formGroup]="form" class="modal-form">
+      <input
+        type="text"
+        formControlName="nameBlockMusic"
+        placeholder="Nome do bloco"
+        class="modal-input"
+      />
+    </form>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+      <button class="btn-save" type="button" (click)="save()">Salvar</button>
+    </div>
+
+  </div>
+
+
+
+  <!-- ====================================== -->
+  <!-- 🔥 MODAL EXCLUSÃO RESTAURADO -->
+  <!-- ====================================== -->
+  <div class="delete-overlay"
+       *ngIf="deleteModalOpen"
+       (click)="closeDeleteModal()">
+  </div>
+
+  <div class="delete-modal"
+       *ngIf="deleteModalOpen"
+       (click)="$event.stopPropagation()">
+
+    <h2>Excluir Bloco</h2>
+
+    <p class="msg">
+      Tem certeza que deseja excluir o bloco
+      <strong>"{{ blockToDelete?.nameBlockMusic }}"</strong>?
+    </p>
+
+    <p class="warning">Essa ação é irreversível.</p>
+
+    <div class="delete-actions">
+      <button class="cancel" (click)="closeDeleteModal()">Cancelar</button>
+      <button class="delete" (click)="confirmDelete()">Excluir</button>
+    </div>
+
+  </div>
+
+</div>
