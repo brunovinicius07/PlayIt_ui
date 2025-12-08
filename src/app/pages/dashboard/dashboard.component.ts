@@ -18,4 +18,9 @@ export class DashboardComponent {
   goToRepertoires() {
     this.router.navigate(['/repertoire']);
   }
+
+  goToSchedule() {
+    this.router.navigate(['/schedule']);
+  }
+
 }

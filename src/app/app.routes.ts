@@ -17,6 +17,9 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { RepertoireComponent } from './pages/repertoire/repertoire.component';
 import { BlockMusicComponent } from './pages/blockmusic/blockmusic.component';
 
+import { ScheduleEventComponent } from './pages/schedule-event/schedule-event.component';
+
+
 
 export const routes: Routes = [
 
@@ -30,6 +33,7 @@ export const routes: Routes = [
     component: DashboardLayoutComponent,
     canActivate: [AuthGuard],
     children: [
+
       { path: "dashboard", component: DashboardComponent },
 
       { path: "repertoire", component: RepertoireComponent },
@@ -37,7 +41,9 @@ export const routes: Routes = [
       { path: "repertoire/:id/blockmusic", component: BlockMusicComponent },
 
       { path: "musicas", component: PlaceholderComponent },
-      { path: "agenda", component: PlaceholderComponent },
+
+      { path: "schedule", component: ScheduleEventComponent },
+
       { path: "profile", component: ProfileComponent },
 
       { path: "", redirectTo: "dashboard", pathMatch: "full" }

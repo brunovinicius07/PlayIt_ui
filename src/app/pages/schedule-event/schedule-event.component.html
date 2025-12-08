@@ -1,0 +1,53 @@
+<div class="schedule-wrapper">
+
+  <div class="schedule-header">
+    <h1>Agenda de Shows</h1>
+    <p>Escolha um dia no calendário para criar um evento.</p>
+  </div>
+
+  <div class="calendar-card">
+
+    <!-- NAV MESES -->
+    <div class="calendar-nav">
+      <button (click)="prevMonth()"><i class="ph ph-caret-left"></i></button>
+
+      <h2>
+        {{ currentMonthName }} {{ currentYear }}
+      </h2>
+
+      <button (click)="nextMonth()"><i class="ph ph-caret-right"></i></button>
+    </div>
+
+    <!-- DIAS DA SEMANA -->
+    <div class="week-days">
+      <div>Dom</div>
+      <div>Seg</div>
+      <div>Ter</div>
+      <div>Qua</div>
+      <div>Qui</div>
+      <div>Sex</div>
+      <div>Sáb</div>
+    </div>
+
+    <!-- CALENDÁRIO -->
+    <div class="calendar-grid">
+      <div
+        class="day"
+        *ngFor="let week of weeks">
+
+        <div
+          *ngFor="let day of week"
+          class="day-box"
+          [class.empty]="!day"
+          [class.selected]="day && selectedDate?.toDateString() === day.toDateString()"
+          (click)="day && selectDay(day)"
+        >
+          <span *ngIf="day">{{ day.getDate() }}</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
