@@ -1,87 +1,52 @@
 <div class="schedule-wrapper">
 
-  <!-- HEADER -->
   <div class="schedule-header">
     <h1>Agenda de Shows</h1>
     <p>Escolha um dia no calendário para criar um evento.</p>
   </div>
 
-  <!-- CARD DO CALENDÁRIO -->
   <div class="calendar-card">
 
-    <!-- NAV MESES -->
     <div class="calendar-nav">
-      <button (click)="prevMonth()">
-        <i class="ph ph-caret-left"></i>
-      </button>
-
+      <button (click)="prevMonth()"><i class="ph ph-caret-left"></i></button>
       <h2>{{ currentMonthName }} {{ currentYear }}</h2>
-
-      <button (click)="nextMonth()">
-        <i class="ph ph-caret-right"></i>
-      </button>
+      <button (click)="nextMonth()"><i class="ph ph-caret-right"></i></button>
     </div>
 
-    <!-- DIAS DA SEMANA -->
     <div class="week-days">
-      <div>Dom</div>
-      <div>Seg</div>
-      <div>Ter</div>
-      <div>Qua</div>
-      <div>Qui</div>
-      <div>Sex</div>
-      <div>Sáb</div>
+      <div>Dom</div><div>Seg</div><div>Ter</div>
+      <div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
     </div>
 
-    <!-- CALENDÁRIO -->
     <div class="calendar-grid">
-
       <div class="week" *ngFor="let week of weeks">
-
         <div
           *ngFor="let day of week"
           class="day-box"
           [class.empty]="!day"
-          [class.selected]="day && selectedDate?.toDateString() === day.toDateString()"
           [class.has-event]="day && daysWithEvents.includes(day.getDate())"
           (click)="day && selectDay(day)"
         >
           <span *ngIf="day">{{ day.getDate() }}</span>
-
-          <span
-            *ngIf="day && daysWithEvents.includes(day.getDate())"
-            class="event-dot">
-          </span>
+          <span *ngIf="day && daysWithEvents.includes(day.getDate())" class="event-dot"></span>
         </div>
-
-
       </div>
-
     </div>
   </div>
 </div>
-
-<!-- =============================== -->
-<!-- MODAL DO DIA (ESTILO MOBILE) -->
-<!-- =============================== -->
 
 <div class="day-modal-overlay" *ngIf="showDayModal" (click)="closeDayModal()"></div>
 
 <div class="day-modal" *ngIf="showDayModal">
 
   <div class="day-modal-header">
-    <h3>
-      {{ selectedDate | date:'dd/MM/yyyy' }}
-    </h3>
-
+    <h3>{{ selectedDate | date:'dd/MM/yyyy' }}</h3>
     <button class="add-btn" (click)="openCreateEvent()">
       <i class="ph ph-plus"></i>
     </button>
   </div>
 
-  <!-- LISTA DE EVENTOS -->
   <div class="day-events">
-
     <div *ngIf="eventsOfDay.length === 0" class="empty-day">
       Nenhum evento para este dia.
     </div>
@@ -93,10 +58,38 @@
       </p>
       <p class="desc">{{ event.description }}</p>
     </div>
-
   </div>
 
-  <button class="close-btn" (click)="closeDayModal()">
-    Fechar
-  </button>
+  <button class="close-btn" (click)="closeDayModal()">Fechar</button>
+</div>
+
+<div class="day-modal-overlay" *ngIf="showCreateModal" (click)="closeCreateModal()"></div>
+
+<div class="day-modal" *ngIf="showCreateModal">
+
+  <div class="day-modal-header">
+    <h3>Novo evento</h3>
+    <span class="modal-date">
+      {{ selectedDate | date:'dd/MM/yyyy' }}
+    </span>
+  </div>
+
+  <div class="day-events">
+    <input type="text" placeholder="Título" [(ngModel)]="newEvent.title" />
+    <div class="time-row">
+      <input type="time" [(ngModel)]="newEvent.opening" />
+      <input type="time" [(ngModel)]="newEvent.closure" />
+    </div>
+    <textarea placeholder="Descrição" [(ngModel)]="newEvent.description"></textarea>
+  </div>
+
+  <div class="modal-actions">
+    <button class="btn-save" (click)="saveEvent()">
+      Salvar
+    </button>
+
+    <button class="btn-cancel" (click)="closeCreateModal()">
+      Cancelar
+    </button>
+  </div>
 </div>
