@@ -1,5 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,28 +7,51 @@ import { Observable } from 'rxjs';
 })
 export class ScheduleEventService {
 
-  private apiUrl = 'http://localhost:8082/v1/schedule/event';
+  private readonly API = 'http://localhost:8082/v1/schedule/event';
 
   constructor(private http: HttpClient) {}
 
-  getEventsByDay(userId: number, day: string): Observable<any[]> {
-    const params = new HttpParams()
-      .set('userId', userId)
-      .set('day', day);
+  createEvent(payload: any): Observable<any> {
+    return this.http.post(`${this.API}/post`, payload);
+  }
 
-    return this.http.get<any[]>(`${this.apiUrl}/day`, { params });
+  updateEvent(eventId: string, payload: any): Observable<any> {
+    return this.http.put(`${this.API}/put/${eventId}`, payload);
+  }
+
+  deleteEvent(eventId: string): Observable<any> {
+    return this.http.delete(
+      `${this.API}/delete/${eventId}`,
+      { responseType: 'text' }
+    );
+  }
+
+  getEventsByDay(userId: number, day: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API}/day`, {
+      params: {
+        userId: userId.toString(),
+        day
+      }
+    });
   }
 
   getDaysWithEvents(userId: number, year: number, month: number): Observable<number[]> {
-    const params = new HttpParams()
-      .set('userId', userId)
-      .set('year', year)
-      .set('month', month);
-
-    return this.http.get<number[]>(`${this.apiUrl}/month`, { params });
+    return this.http.get<number[]>(`${this.API}/month`, {
+      params: {
+        userId: userId.toString(),
+        year: year.toString(),
+        month: month.toString()
+      }
+    });
   }
 
-  createEvent(payload: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/post`, payload);
+  getEventsByRange(userId: number, start: string, end: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API}/range`, {
+      params: {
+        userId: userId.toString(),
+        start,
+        end
+      }
+    });
   }
 }

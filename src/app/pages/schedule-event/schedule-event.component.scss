@@ -329,6 +329,115 @@
   background: #e2e2e2;
 }
 
+.event-card {
+  position: relative;
+}
+
+/* lápis */
+.event-card .edit-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: #7c00ff;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background .15s;
+}
+
+.event-card .edit-icon:hover {
+  background: rgba(124, 0, 255, 0.12);
+}
+
+/* ===== MENU DO EVENTO – AO LADO DO LÁPIS ===== */
+.event-card .dropdown-menu {
+  position: absolute;
+  top: 10px;        /* MESMA ALTURA DO LÁPIS */
+  right: 44px;     /* À ESQUERDA DO LÁPIS */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 2px 0;
+  z-index: 2000;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 4px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .15s ease, color .15s ease;
+
+  i {
+    font-size: 14px;
+    color: #7c00ff;
+  }
+
+  &:hover {
+    background: rgba(124, 0, 255, 0.08);  /* hover bem sutil */
+    color: #7c00ff;
+  }
+}
+
+/* excluir */
+.dropdown-item.delete {
+  color: #b71c1c;
+
+  i {
+    color: #e53935;
+  }
+
+  &:hover {
+    background: rgba(229, 57, 53, 0.08);
+    color: #e53935;
+  }
+}
+
+
+/* Botões */
+.event-card .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 8px;
+
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s ease;
+}
+
+.event-card .dropdown-item i {
+  font-size: 14px;
+  color: #7c00ff;
+}
+
+
+/* Excluir */
+.event-card .dropdown-item.delete {
+  color: #b71c1c;
+}
+
+.event-card .dropdown-item.delete i {
+  color: #e53935;
+}
+
+
+
+
 
 @keyframes slideUp {
   from {

@@ -12,10 +12,8 @@ import { ScheduleEventService } from '../../service/schedule-event.service';
 })
 export class ScheduleEventComponent implements OnInit {
 
-  // ===== USER =====
   readonly userId = 1;
 
-  // ===== CALENDAR =====
   today = new Date();
   currentMonth = this.today.getMonth();
   currentYear = this.today.getFullYear();
@@ -32,13 +30,14 @@ export class ScheduleEventComponent implements OnInit {
     return this.monthNames[this.currentMonth];
   }
 
-  // ===== DAY MODAL =====
   showDayModal = false;
   selectedDate: Date | null = null;
   eventsOfDay: any[] = [];
 
-  // ===== CREATE MODAL =====
   showCreateModal = false;
+  editingEventId: string | null = null;
+
+  openEventMenuIndex: number | null = null;
 
   newEvent = {
     title: '',
@@ -49,13 +48,11 @@ export class ScheduleEventComponent implements OnInit {
 
   constructor(private scheduleService: ScheduleEventService) {}
 
-  // ===== INIT =====
   ngOnInit(): void {
     this.buildCalendar(this.currentMonth, this.currentYear);
     this.loadDaysWithEvents();
   }
 
-  // ===== CALENDAR =====
   buildCalendar(month: number, year: number) {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -74,7 +71,6 @@ export class ScheduleEventComponent implements OnInit {
           dayCounter++;
         }
       }
-
       calendar.push(row);
     }
 
@@ -99,12 +95,13 @@ export class ScheduleEventComponent implements OnInit {
     this.loadDaysWithEvents();
   }
 
-  // ===== API =====
   loadDaysWithEvents() {
     this.scheduleService
       .getDaysWithEvents(this.userId, this.currentYear, this.currentMonth + 1)
       .subscribe({
-        next: days => this.daysWithEvents = days,
+        next: days => {
+          this.daysWithEvents = days.map(d => Number(d));
+        },
         error: () => this.daysWithEvents = []
       });
   }
@@ -113,7 +110,7 @@ export class ScheduleEventComponent implements OnInit {
     this.selectedDate = day;
     this.showDayModal = true;
 
-    const formatted = day.toISOString().split('T')[0];
+    const formatted = this.formatDateLocal(day);
 
     this.scheduleService
       .getEventsByDay(this.userId, formatted)
@@ -126,22 +123,41 @@ export class ScheduleEventComponent implements OnInit {
   closeDayModal() {
     this.showDayModal = false;
     this.eventsOfDay = [];
+    this.openEventMenuIndex = null;
   }
 
-  // ===== CREATE EVENT =====
   openCreateEvent() {
+    this.resetForm();
+    this.editingEventId = null;
+    this.showCreateModal = true;
+  }
+
+  editEvent(event: any, e: MouseEvent) {
+    e.stopPropagation();
+    this.openEventMenuIndex = null;
+
+    this.editingEventId = event.id;
+
+    this.newEvent = {
+      title: event.title,
+      opening: event.opening.slice(11, 16),
+      closure: event.closure.slice(11, 16),
+      description: event.description
+    };
+
     this.showCreateModal = true;
   }
 
   closeCreateModal() {
     this.showCreateModal = false;
+    this.editingEventId = null;
     this.resetForm();
   }
 
   saveEvent() {
     if (!this.selectedDate) return;
 
-    const day = this.selectedDate.toISOString().split('T')[0];
+    const day = this.formatDateLocal(this.selectedDate);
 
     const payload = {
       userId: this.userId,
@@ -152,13 +168,24 @@ export class ScheduleEventComponent implements OnInit {
       description: this.newEvent.description
     };
 
-    this.scheduleService.createEvent(payload).subscribe({
-      next: () => {
-        this.closeCreateModal();
-        this.selectDay(this.selectedDate!);
-        this.loadDaysWithEvents();
-      }
-    });
+    // 🔥 EDIT
+    if (this.editingEventId) {
+      this.scheduleService
+        .updateEvent(this.editingEventId, payload)
+        .subscribe(() => this.finishSave());
+    }
+    // 🔥 CREATE
+    else {
+      this.scheduleService
+        .createEvent(payload)
+        .subscribe(() => this.finishSave());
+    }
+  }
+
+  private finishSave() {
+    this.closeCreateModal();
+    this.selectDay(this.selectedDate!);
+    this.loadDaysWithEvents();
   }
 
   resetForm() {
@@ -168,5 +195,31 @@ export class ScheduleEventComponent implements OnInit {
       closure: '',
       description: ''
     };
+  }
+
+  deleteEvent(event: any, e: MouseEvent) {
+    e.stopPropagation();
+    this.openEventMenuIndex = null;
+
+    this.scheduleService.deleteEvent(event.id).subscribe(() => {
+
+      this.eventsOfDay = this.eventsOfDay.filter(ev => ev.id !== event.id);
+
+      this.loadDaysWithEvents();
+    });
+  }
+
+
+  toggleEventMenu(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.openEventMenuIndex =
+      this.openEventMenuIndex === index ? null : index;
+  }
+
+  private formatDateLocal(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

@@ -2,20 +2,31 @@
 
   <div class="schedule-header">
     <h1>Agenda de Shows</h1>
-    <p>Escolha um dia no calendário para criar um evento.</p>
+    <p>Organize seus shows, selecione uma data no calendário e adicione seu evento.</p>
   </div>
 
   <div class="calendar-card">
 
     <div class="calendar-nav">
-      <button (click)="prevMonth()"><i class="ph ph-caret-left"></i></button>
+      <button (click)="prevMonth()">
+        <i class="ph ph-caret-left"></i>
+      </button>
+
       <h2>{{ currentMonthName }} {{ currentYear }}</h2>
-      <button (click)="nextMonth()"><i class="ph ph-caret-right"></i></button>
+
+      <button (click)="nextMonth()">
+        <i class="ph ph-caret-right"></i>
+      </button>
     </div>
 
     <div class="week-days">
-      <div>Dom</div><div>Seg</div><div>Ter</div>
-      <div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+      <div>Dom</div>
+      <div>Seg</div>
+      <div>Ter</div>
+      <div>Qua</div>
+      <div>Qui</div>
+      <div>Sex</div>
+      <div>Sáb</div>
     </div>
 
     <div class="calendar-grid">
@@ -28,42 +39,98 @@
           (click)="day && selectDay(day)"
         >
           <span *ngIf="day">{{ day.getDate() }}</span>
-          <span *ngIf="day && daysWithEvents.includes(day.getDate())" class="event-dot"></span>
+          <span
+            *ngIf="day && daysWithEvents.includes(day.getDate())"
+            class="event-dot">
+          </span>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
-<div class="day-modal-overlay" *ngIf="showDayModal" (click)="closeDayModal()"></div>
+<div
+  class="day-modal-overlay"
+  *ngIf="showDayModal"
+  (click)="closeDayModal()">
+</div>
 
 <div class="day-modal" *ngIf="showDayModal">
 
   <div class="day-modal-header">
     <h3>{{ selectedDate | date:'dd/MM/yyyy' }}</h3>
+
     <button class="add-btn" (click)="openCreateEvent()">
       <i class="ph ph-plus"></i>
     </button>
   </div>
 
   <div class="day-events">
+
     <div *ngIf="eventsOfDay.length === 0" class="empty-day">
       Nenhum evento para este dia.
     </div>
 
-    <div class="event-card" *ngFor="let event of eventsOfDay">
+    <div
+      class="event-card"
+      *ngFor="let event of eventsOfDay; let i = index">
+
+      <div class="edit-icon"
+           (click)="toggleEventMenu(i, $event)">
+        <i class="ph ph-pencil-simple-line"></i>
+      </div>
+
       <h4>{{ event.title }}</h4>
+
       <p class="time">
-        {{ event.opening | date:'HH:mm' }} - {{ event.closure | date:'HH:mm' }}
+        {{ event.opening | date:'HH:mm' }}
+        -
+        {{ event.closure | date:'HH:mm' }}
       </p>
+
       <p class="desc">{{ event.description }}</p>
+
+      <div
+        class="dropdown-menu"
+        *ngIf="openEventMenuIndex === i"
+        (click)="$event.stopPropagation()">
+
+        <button
+          class="dropdown-item"
+          (click)="editEvent(event, $event)">
+          <i class="ph ph-pencil"></i>
+          Editar
+        </button>
+
+        <button
+          class="dropdown-item delete"
+          (click)="deleteEvent(event, $event)">
+          <i class="ph ph-trash"></i>
+          Excluir
+        </button>
+
+      </div>
     </div>
+
   </div>
 
-  <button class="close-btn" (click)="closeDayModal()">Fechar</button>
+  <button class="close-btn" (click)="closeDayModal()">
+    Fechar
+  </button>
 </div>
 
-<div class="day-modal-overlay" *ngIf="showCreateModal" (click)="closeCreateModal()"></div>
+<div
+  class="day-modal-overlay"
+  *ngIf="openEventMenuIndex !== null"
+  (click)="openEventMenuIndex = null">
+</div>
+
+<div
+  class="day-modal-overlay"
+  *ngIf="showCreateModal"
+  (click)="closeCreateModal()">
+</div>
 
 <div class="day-modal" *ngIf="showCreateModal">
 
@@ -75,12 +142,20 @@
   </div>
 
   <div class="day-events">
-    <input type="text" placeholder="Título" [(ngModel)]="newEvent.title" />
+    <input
+      type="text"
+      placeholder="Título"
+      [(ngModel)]="newEvent.title" />
+
     <div class="time-row">
       <input type="time" [(ngModel)]="newEvent.opening" />
       <input type="time" [(ngModel)]="newEvent.closure" />
     </div>
-    <textarea placeholder="Descrição" [(ngModel)]="newEvent.description"></textarea>
+
+    <textarea
+      placeholder="Descrição"
+      [(ngModel)]="newEvent.description">
+    </textarea>
   </div>
 
   <div class="modal-actions">
