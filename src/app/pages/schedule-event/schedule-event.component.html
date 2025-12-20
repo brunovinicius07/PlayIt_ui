@@ -1,10 +1,12 @@
 <div class="schedule-wrapper">
 
+  <!-- HEADER -->
   <div class="schedule-header">
     <h1>Agenda de Shows</h1>
     <p>Organize seus shows, selecione uma data no calendário e adicione seu evento.</p>
   </div>
 
+  <!-- CALENDÁRIO -->
   <div class="calendar-card">
 
     <div class="calendar-nav">
@@ -36,6 +38,7 @@
           class="day-box"
           [class.empty]="!day"
           [class.has-event]="day && daysWithEvents.includes(day.getDate())"
+          [class.today]="isToday(day)"
           (click)="day && selectDay(day)"
         >
           <span *ngIf="day">{{ day.getDate() }}</span>
@@ -50,12 +53,14 @@
   </div>
 </div>
 
+<!-- OVERLAY DIA -->
 <div
   class="day-modal-overlay"
   *ngIf="showDayModal"
   (click)="closeDayModal()">
 </div>
 
+<!-- MODAL DO DIA -->
 <div class="day-modal" *ngIf="showDayModal">
 
   <div class="day-modal-header">
@@ -76,21 +81,22 @@
       class="event-card"
       *ngFor="let event of eventsOfDay; let i = index">
 
-      <div class="edit-icon"
-           (click)="toggleEventMenu(i, $event)">
+      <div
+        class="edit-icon"
+        (click)="toggleEventMenu(i, $event)">
         <i class="ph ph-pencil-simple-line"></i>
       </div>
 
       <h4>{{ event.title }}</h4>
 
       <p class="time">
-        {{ event.opening | date:'HH:mm' }}
-        -
+        {{ event.opening | date:'HH:mm' }} -
         {{ event.closure | date:'HH:mm' }}
       </p>
 
       <p class="desc">{{ event.description }}</p>
 
+      <!-- MENU DO EVENTO -->
       <div
         class="dropdown-menu"
         *ngIf="openEventMenuIndex === i"
@@ -105,7 +111,7 @@
 
         <button
           class="dropdown-item delete"
-          (click)="deleteEvent(event, $event)">
+          (click)="openDeleteEventModal(event, $event)">
           <i class="ph ph-trash"></i>
           Excluir
         </button>
@@ -120,22 +126,25 @@
   </button>
 </div>
 
+<!-- OVERLAY MENU -->
 <div
   class="day-modal-overlay"
   *ngIf="openEventMenuIndex !== null"
   (click)="openEventMenuIndex = null">
 </div>
 
+<!-- OVERLAY CRIAR / EDITAR -->
 <div
   class="day-modal-overlay"
   *ngIf="showCreateModal"
   (click)="closeCreateModal()">
 </div>
 
+<!-- MODAL CRIAR / EDITAR -->
 <div class="day-modal" *ngIf="showCreateModal">
 
   <div class="day-modal-header">
-    <h3>Novo evento</h3>
+    <h3>{{ editingEventId ? 'Editar evento' : 'Novo evento' }}</h3>
     <span class="modal-date">
       {{ selectedDate | date:'dd/MM/yyyy' }}
     </span>
@@ -167,4 +176,41 @@
       Cancelar
     </button>
   </div>
+</div>
+
+<!-- ======================== -->
+<!-- MODAL DE EXCLUSÃO EVENTO -->
+<!-- ======================== -->
+
+<div
+  class="delete-overlay"
+  *ngIf="deleteEventModalOpen"
+  (click)="closeDeleteEventModal()">
+</div>
+
+<div class="delete-modal" *ngIf="deleteEventModalOpen">
+  <h2>Excluir Evento</h2>
+
+  <p class="msg">
+    Tem certeza que deseja excluir o evento
+    <strong>"{{ eventToDelete?.title }}"</strong>?
+  </p>
+
+  <p class="warning">Essa ação é irreversível.</p>
+
+  <div class="delete-actions">
+    <button class="cancel" (click)="closeDeleteEventModal()">
+      Cancelar
+    </button>
+
+    <button class="delete" (click)="confirmDeleteEvent()">
+      Excluir
+    </button>
+  </div>
+</div>
+
+<!-- TOAST DE ERRO GLOBAL -->
+<div *ngIf="apiErrorMessage" class="api-toast">
+  <i class="ph ph-warning-circle"></i>
+  {{ apiErrorMessage }}
 </div>

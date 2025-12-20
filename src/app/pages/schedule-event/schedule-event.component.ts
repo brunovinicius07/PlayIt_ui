@@ -31,13 +31,20 @@ export class ScheduleEventComponent implements OnInit {
   }
 
   showDayModal = false;
+  showCreateModal = false;
+
   selectedDate: Date | null = null;
   eventsOfDay: any[] = [];
 
-  showCreateModal = false;
   editingEventId: string | null = null;
-
   openEventMenuIndex: number | null = null;
+
+  // 🔔 Toast de erro da API
+  apiErrorMessage: string | null = null;
+
+  // 🔥 Modal de exclusão
+  deleteEventModalOpen = false;
+  eventToDelete: any = null;
 
   newEvent = {
     title: '',
@@ -52,6 +59,8 @@ export class ScheduleEventComponent implements OnInit {
     this.buildCalendar(this.currentMonth, this.currentYear);
     this.loadDaysWithEvents();
   }
+
+  /* ================= CALENDÁRIO ================= */
 
   buildCalendar(month: number, year: number) {
     const firstDay = new Date(year, month, 1).getDay();
@@ -71,6 +80,7 @@ export class ScheduleEventComponent implements OnInit {
           dayCounter++;
         }
       }
+
       calendar.push(row);
     }
 
@@ -99,16 +109,17 @@ export class ScheduleEventComponent implements OnInit {
     this.scheduleService
       .getDaysWithEvents(this.userId, this.currentYear, this.currentMonth + 1)
       .subscribe({
-        next: days => {
-          this.daysWithEvents = days.map(d => Number(d));
-        },
+        next: days => this.daysWithEvents = days.map(d => Number(d)),
         error: () => this.daysWithEvents = []
       });
   }
 
+  /* ================= EVENTOS ================= */
+
   selectDay(day: Date) {
     this.selectedDate = day;
     this.showDayModal = true;
+    this.openEventMenuIndex = null;
 
     const formatted = this.formatDateLocal(day);
 
@@ -126,8 +137,17 @@ export class ScheduleEventComponent implements OnInit {
     this.openEventMenuIndex = null;
   }
 
+  toggleEventMenu(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.openEventMenuIndex =
+      this.openEventMenuIndex === index ? null : index;
+  }
+
+  /* ================= CREATE / EDIT ================= */
+
   openCreateEvent() {
     this.resetForm();
+    this.apiErrorMessage = null;
     this.editingEventId = null;
     this.showCreateModal = true;
   }
@@ -137,6 +157,7 @@ export class ScheduleEventComponent implements OnInit {
     this.openEventMenuIndex = null;
 
     this.editingEventId = event.id;
+    this.apiErrorMessage = null;
 
     this.newEvent = {
       title: event.title,
@@ -151,6 +172,7 @@ export class ScheduleEventComponent implements OnInit {
   closeCreateModal() {
     this.showCreateModal = false;
     this.editingEventId = null;
+    this.apiErrorMessage = null;
     this.resetForm();
   }
 
@@ -168,18 +190,14 @@ export class ScheduleEventComponent implements OnInit {
       description: this.newEvent.description
     };
 
-    // 🔥 EDIT
-    if (this.editingEventId) {
-      this.scheduleService
-        .updateEvent(this.editingEventId, payload)
-        .subscribe(() => this.finishSave());
-    }
-    // 🔥 CREATE
-    else {
-      this.scheduleService
-        .createEvent(payload)
-        .subscribe(() => this.finishSave());
-    }
+    const request$ = this.editingEventId
+      ? this.scheduleService.updateEvent(this.editingEventId, payload)
+      : this.scheduleService.createEvent(payload);
+
+    request$.subscribe({
+      next: () => this.finishSave(),
+      error: err => this.handleApiError(err)
+    });
   }
 
   private finishSave() {
@@ -187,6 +205,59 @@ export class ScheduleEventComponent implements OnInit {
     this.selectDay(this.selectedDate!);
     this.loadDaysWithEvents();
   }
+
+  /* ================= DELETE (COM CONFIRMAÇÃO) ================= */
+
+  openDeleteEventModal(event: any, e?: MouseEvent) {
+    e?.stopPropagation();
+    this.eventToDelete = event;
+    this.deleteEventModalOpen = true;
+    this.openEventMenuIndex = null;
+  }
+
+  closeDeleteEventModal() {
+    this.deleteEventModalOpen = false;
+    this.eventToDelete = null;
+  }
+
+  confirmDeleteEvent() {
+    if (!this.eventToDelete) return;
+
+    this.scheduleService.deleteEvent(this.eventToDelete.id).subscribe(() => {
+
+      this.eventsOfDay = this.eventsOfDay.filter(
+        ev => ev.id !== this.eventToDelete.id
+      );
+
+      if (this.selectedDate && this.eventsOfDay.length === 0) {
+        const dayNumber = this.selectedDate.getDate();
+        this.daysWithEvents = this.daysWithEvents.filter(d => d !== dayNumber);
+      }
+
+      this.closeDeleteEventModal();
+    });
+  }
+
+  /* ================= ERROS ================= */
+
+  handleApiError(error: any) {
+    if (error?.status === 409 && error.error?.message) {
+      this.apiErrorMessage = error.error.message;
+      this.autoClearError();
+      return;
+    }
+
+    this.apiErrorMessage = 'Erro inesperado ao salvar o evento.';
+    this.autoClearError();
+  }
+
+  private autoClearError() {
+    setTimeout(() => {
+      this.apiErrorMessage = null;
+    }, 4000);
+  }
+
+  /* ================= UTILS ================= */
 
   resetForm() {
     this.newEvent = {
@@ -197,29 +268,22 @@ export class ScheduleEventComponent implements OnInit {
     };
   }
 
-  deleteEvent(event: any, e: MouseEvent) {
-    e.stopPropagation();
-    this.openEventMenuIndex = null;
-
-    this.scheduleService.deleteEvent(event.id).subscribe(() => {
-
-      this.eventsOfDay = this.eventsOfDay.filter(ev => ev.id !== event.id);
-
-      this.loadDaysWithEvents();
-    });
-  }
-
-
-  toggleEventMenu(index: number, event: MouseEvent) {
-    event.stopPropagation();
-    this.openEventMenuIndex =
-      this.openEventMenuIndex === index ? null : index;
-  }
-
   private formatDateLocal(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  isToday(day: Date | null): boolean {
+    if (!day) return false;
+
+    const today = new Date();
+
+    return (
+      day.getDate() === today.getDate() &&
+      day.getMonth() === today.getMonth() &&
+      day.getFullYear() === today.getFullYear()
+    );
   }
 }
