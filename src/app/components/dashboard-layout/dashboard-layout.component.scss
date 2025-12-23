@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid #e2e2e2;
-  box-shadow: 4px 0 25px rgba(0,0,0,.05);
+  box-shadow: 4px 0 25px rgba(0, 0, 0, .05);
   border-radius: 0 20px 20px 0;
   transition: width .3s ease, padding .3s ease;
 }
@@ -65,8 +65,7 @@
   gap: 14px;
 }
 
-.toggle-line-btn,
-.theme-btn {
+.toggle-line-btn {
   width: 42px;
   height: 42px;
   display: flex;
@@ -77,13 +76,47 @@
   border-radius: 12px;
   cursor: pointer;
   transition: .25s;
-  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
 }
 
-.toggle-line-btn:hover,
-.theme-btn:hover {
+/* Vira X quando aberto */
+.dashboard-container.mobile-open .global-toggle span {
+  background: transparent !important;
+}
+
+.dashboard-container.mobile-open .global-toggle span::before {
+  transform: rotate(45deg);
+  top: 0;
+  background: var(--primary) !important;
+}
+
+.dashboard-container.mobile-open .global-toggle span::after {
+  transform: rotate(-45deg);
+  top: 0;
+  background: var(--primary) !important;
+}
+
+.theme-btn {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: .25s;
+  box-shadow: none;
+}
+
+.toggle-line-btn:hover {
   background: #f4f4f4;
   transform: scale(1.05);
+}
+
+.theme-btn:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
 }
 
 .toggle-line-btn span {
@@ -101,6 +134,18 @@
 .theme-btn i {
   color: var(--primary);
   font-size: 22px;
+}
+
+.theme-btn {
+  pointer-events: auto !important;
+  position: relative;
+}
+
+/* No mobile, garantir z-index alto para o theme-btn */
+@media (max-width: 938px) {
+  .theme-btn {
+    z-index: 1106 !important;
+  }
 }
 
 /* ============================
@@ -160,7 +205,7 @@ nav a i {
 }
 
 nav a:hover {
-  background: rgba(112,1,253,0.12);
+  background: rgba(112, 1, 253, 0.12);
   transform: translateX(5px);
 }
 
@@ -210,146 +255,508 @@ nav a.active i {
   width: 100%;
   height: 1px;
   margin: 18px 0 22px;
-  background: rgba(0,0,0,0.10);
+  background: rgba(0, 0, 0, 0.10);
   border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
 body.dark-mode .menu-divider {
-  background: rgba(255,255,255,0.12);
-  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+/* ============================
+   BACKDROP GLOBAL (CORRETO)
+=============================== */
+body.mobile-menu-open::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+/* No mobile, fazer o backdrop não bloquear a área da sidebar */
+@media (max-width: 938px) {
+  body.mobile-menu-open::after {
+    clip-path: polygon(260px 0, 100% 0, 100% 100%, 260px 100%);
+  }
+
+  /* Garantir que a sidebar e seus elementos sejam clicáveis */
+  body.mobile-menu-open .sidebar,
+  body.mobile-menu-open .sidebar * {
+    pointer-events: auto !important;
+  }
 }
 
 /* ============================
      RESPONSIVIDADE
 =============================== */
-@media (max-width: 938px) {
-
-  .dashboard-container.collapsed .sidebar {
-    width: 75px !important;
-    padding: 22px 8px !important;
-  }
-
-  .toggle-line-btn {
+@media (min-width: 939px) {
+  .global-toggle {
     display: none !important;
-  }
-
-  .logo-full { display: none !important; }
-  .logo-mini { display: block !important; }
-
-  nav a span { display: none !important; }
-  nav a { justify-content: center !important; }
-
-  .content {
-    padding-left: 35px !important;
-    padding-right: 35px !important;
-  }
-
-  /* =====================================================================
-   📱 AJUSTE DA LOGO NO MENU PARA MOBILE
-===================================================================== */
-  @media (max-width: 600px) {
-
-    .content {
-      padding: 40px 25px !important;
-      padding-bottom: 0 !important;  /* <<< ESSENCIAL para remover o espaço branco */
-    }
-
-    .logo-area {
-      margin-top: 10px !important;
-      margin-bottom: 10px !important;
-    }
-
-    .logo-full {
-      width: 75px !important;     /* <<< diminui a logo grande */
-    }
-
-    .logo-mini {
-      width: 32px !important;     /* <<< quando o menu está colapsado */
-      height: 32px !important;
-    }
-  }
-
-  /* ============================================================
-   📱 AJUSTES PARA CELULARES MUITO PEQUENOS (ex: iPhone SE — 320px)
-============================================================ */
-
-@media (max-width: 360px) {
-
-  /* Sidebar ainda menor */
-  .sidebar {
-    width: 55px !important;
-    padding: 15px 6px !important;
-  }
-
-  .logo-mini {
-    width: 28px !important;
-    height: 28px !important;
-  }
-
-  nav a i {
-    font-size: 20px !important;
-  }
-
-  .logout i {
-    font-size: 18px !important;
-  }
-
-  /* Remove QUALQUER texto que sobrar */
-  nav a span,
-  .logout span {
-    display: none !important;
-  }
-
-  /* Área de conteúdo deve ocupar todo espaço possível */
-  .content {
-    padding: 15px !important;
-  }
-
-  /* Banner ajustado */
-  .neon-glass {
-    padding: 22px !important;
-    flex-direction: column;
-    text-align: center;
-    gap: 18px;
-  }
-
-  .banner-left h2 {
-    font-size: 22px !important;
-    line-height: 26px !important;
-  }
-
-  .banner-left p {
-    font-size: 14px !important;
-    max-width: 260px !important;
-    margin: 0 auto;
-  }
-
-  .banner-illustration img {
-    width: 150px !important;
-  }
-
-  /* Cards totalmente responsivos */
-  .cards {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 18px !important;
-  }
-
-  .card {
-    width: 100% !important;
-    padding: 22px !important;
-    border-radius: 18px !important;
-  }
-
-  .card h3 {
-    font-size: 18px !important;
-  }
-
-  .card p {
-    font-size: 13px !important;
   }
 }
 
+@media (max-width: 938px) {
 
+  /* MOBILE ABERTO → ajustar layout dos botões */
+  .dashboard-container.mobile-open .sidebar .top-controls {
+    padding-top: 0 !important;
+    margin-bottom: 20px !important;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .dashboard-container.mobile-open .sidebar .theme-btn {
+    width: 42px;
+    height: 42px;
+    position: relative;
+    z-index: 1106 !important;
+    /* Acima do mobile-topbar (1104) e global-toggle (1105) */
+    pointer-events: auto !important;
+  }
+
+  /* Garantir que todos os botões dentro da sidebar sejam clicáveis no mobile */
+  .sidebar .theme-btn {
+    pointer-events: auto !important;
+    z-index: 1106 !important;
+    /* Acima do mobile-topbar */
+    position: relative;
+  }
+
+
+
+  .mobile-topbar .global-toggle {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    z-index: auto !important;
+  }
+
+  .mobile-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-user .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    white-space: nowrap;
+  }
+
+  .mobile-user img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    background: transparent;
+  }
+
+  .mobile-topbar .toggle-line-btn,
+  .mobile-topbar .theme-btn {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+  }
+
+  .mobile-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 64px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    border-bottom: none;
+
+    z-index: 1104;
+    pointer-events: none;
+    /* Não bloquear cliques, apenas os elementos filhos serão clicáveis */
+  }
+
+  /* Quando o menu mobile está aberto, o topbar não deve ser cortado */
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: none !important;
+  }
+
+  /* Garantir que os elementos dentro do mobile-topbar sejam clicáveis */
+  .mobile-topbar>* {
+    pointer-events: auto;
+  }
+
+
+
+  .global-toggle span,
+  .global-toggle span::before,
+  .global-toggle span::after {
+    transition: all .35s cubic-bezier(.4, 0, .2, 1);
+  }
+
+  /* MENU ABERTO → VIRA "X" */
+  .dashboard-container.mobile-open .global-toggle span {
+    background: transparent;
+  }
+
+  .dashboard-container.mobile-open .global-toggle span::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+
+  .dashboard-container.mobile-open .global-toggle span::after {
+    transform: rotate(-45deg);
+    top: 0;
+  }
+
+  .global-toggle span {
+    position: relative;
+    width: 22px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 5px;
+    display: block;
+  }
+
+  .global-toggle span::before,
+  .global-toggle span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 22px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 5px;
+  }
+
+  .global-toggle span::before {
+    top: -7px;
+  }
+
+  .global-toggle span::after {
+    top: 7px;
+  }
+
+  /* BOTÃO GLOBAL (HAMBÚRGUER) SEMPRE TRANSPARENTE E NO FLUXO */
+  button.toggle-line-btn.global-toggle {
+    display: flex !important;
+    position: relative !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 1110 !important;
+    pointer-events: auto !important;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 260px;
+    z-index: 1002;
+    transform: translateX(-100%);
+    transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+    border-radius: 0 20px 20px 0;
+    will-change: transform;
+    pointer-events: auto;
+  }
+
+  /* Garantir que elementos interativos dentro da sidebar sejam clicáveis */
+  .sidebar * {
+    pointer-events: auto;
+  }
+
+  /* Garantir que o top-controls e os botões fiquem acima do mobile-topbar */
+  .sidebar .top-controls {
+    position: relative;
+    z-index: 1106;
+  }
+
+  .sidebar .top-controls .toggle-line-btn {
+    z-index: 1106 !important;
+    pointer-events: auto !important;
+    position: relative;
+  }
+
+  .dashboard-container.mobile-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .content {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 90px !important;
+  }
+}
+
+/* Ajuste específico para iPhone 6/7/8 Plus (414px) e menores 
+   O menu deve ocupar menos que a metade da tela ( < 207px )
+*/
+@media (max-width: 430px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  /* Ajustar o recorte do backdrop e topbar para acompanhar a nova largura */
+  body.mobile-menu-open::after {
+    clip-path: polygon(200px 0, 100% 0, 100% 100%, 200px 100%);
+  }
+
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: polygon(200px 0, 100% 0, 100% 100%, 200px 100%);
+  }
+}
+
+/* Ajustes para telas bem pequenas (iPhone SE/5 - 320px) */
+@media (max-width: 374px) {
+  .sidebar {
+    width: 170px;
+  }
+
+  .logo-full {
+    width: 110px;
+    margin-bottom: 25px;
+  }
+
+  nav a {
+    font-size: 13px;
+    padding: 10px 10px;
+    gap: 8px;
+  }
+
+  nav a i {
+    font-size: 18px;
+  }
+
+  .logout {
+    font-size: 13px;
+    padding: 10px 10px;
+  }
+
+  .content {
+    padding-top: 74px !important;
+  }
+
+  body.mobile-menu-open::after {
+    clip-path: polygon(170px 0, 100% 0, 100% 100%, 170px 100%);
+  }
+
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: polygon(170px 0, 100% 0, 100% 100%, 170px 100%);
+  }
+}
+
+/* CORREÇÃO: Ajustes refinados de espaçamento vertical para iPhone SE (320px) */
+@media (max-width: 374px) {
+  .sidebar {
+    width: 165px;
+    padding-top: 15px;
+    /* Reduzido */
+  }
+
+  .top-controls {
+    margin-bottom: 15px !important;
+  }
+
+  .logo-area {
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
+
+  .logo-full {
+    width: 100px;
+  }
+
+  nav a {
+    font-size: 13px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  nav a i {
+    font-size: 18px;
+  }
+
+  .logout {
+    font-size: 13px;
+    padding: 10px 10px;
+  }
+
+  .content {
+    padding-top: 74px !important;
+  }
+
+  body.mobile-menu-open::after {
+    clip-path: polygon(170px 0, 100% 0, 100% 100%, 170px 100%);
+  }
+
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: polygon(170px 0, 100% 0, 100% 100%, 170px 100%);
+  }
+}
+
+/* CORREÇÃO GLOBAL: Botão "X" dentro do menu mobile (para todas telas < 938px) */
+/* CORREÇÃO GLOBAL: Botão "X" dentro do menu mobile (para todas telas < 938px) */
+@media (max-width: 938px) {
+
+  /* ALINHAMENTO PERFEITO: Ajustando padding para puxar o botão Lua para cima */
+  .sidebar {
+    padding-top: 12px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Justificar para o final (direita) para alinhar a Lua no canto oposto ao X */
+  .sidebar .top-controls {
+    width: 100% !important;
+    /* GARANTIR LARGURA TOTAL */
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end !important;
+    /* ALINHAMENTO À DIREITA */
+  }
+
+  /* ESCONDER O BOTÃO DA SIDEBAR PARA EVITAR DUPLICIDADE */
+  .sidebar .top-controls .toggle-line-btn,
+  .sidebar .toggle-line-btn {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  /* REFORÇAR TRANSPARÊNCIA E ANIMAÇÃO DO X */
+  .mobile-topbar .global-toggle {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .mobile-topbar .global-toggle span {
+    background: var(--primary) !important;
+  }
+
+  /* TOGGLE GLOBAL VIRA X QUANDO ABERTO */
+  .dashboard-container.mobile-open .mobile-topbar .global-toggle span {
+    background: transparent !important;
+  }
+
+  .dashboard-container.mobile-open .mobile-topbar .global-toggle span::before {
+    transform: rotate(45deg);
+    top: 0;
+    background: var(--primary) !important;
+  }
+
+  .dashboard-container.mobile-open .mobile-topbar .global-toggle span::after {
+    transform: rotate(-45deg);
+    top: 0;
+    background: var(--primary) !important;
+  }
+
+  /* GARANTIR QUE A TOPBAR NÃO SEJA CORTADA QUANDO ABERTA */
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: none !important;
+  }
+}
+
+/* TAMANHOS PROPORCIONAIS */
+@media (max-width: 430px) {
+  .sidebar .theme-btn {
+    width: 36px !important;
+    height: 36px !important;
+    margin-left: 0;
+    /* Revogando margem */
+    background: transparent !important;
+  }
+
+  .sidebar .theme-btn i {
+    font-size: 20px;
+  }
+
+  /* Ajustar tamanho do global toggle */
+  .mobile-topbar .global-toggle span,
+  .mobile-topbar .global-toggle span::before,
+  .mobile-topbar .global-toggle span::after {
+    width: 22px;
+  }
+
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: none !important;
+  }
+}
+
+/* iPhone SE/5 (aprox 320px) */
+@media (max-width: 374px) {
+  .sidebar {
+    width: 165px;
+    padding-top: 12px !important;
+  }
+
+  .sidebar .theme-btn {
+    width: 32px !important;
+    height: 32px !important;
+    margin-left: 0;
+    /* Revogando margem */
+  }
+
+  .sidebar .theme-btn i {
+    font-size: 18px;
+  }
+
+  .logo-area {
+    margin-top: 5px;
+    margin-bottom: 20px;
+  }
+
+  .logo-full {
+    width: 100px;
+  }
+
+  nav a {
+    font-size: 13px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  nav a i {
+    font-size: 18px;
+  }
+
+  .logout {
+    font-size: 13px;
+    padding: 10px 10px;
+  }
+
+  .content {
+    padding-top: 74px !important;
+  }
+
+  body.mobile-menu-open::after {
+    clip-path: polygon(165px 0, 100% 0, 100% 100%, 165px 100%);
+  }
+
+  /* Garantir que topbar não seja cortada */
+  .dashboard-container.mobile-open .mobile-topbar {
+    clip-path: none !important;
+  }
 }

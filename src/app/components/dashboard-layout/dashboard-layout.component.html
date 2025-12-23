@@ -1,11 +1,27 @@
-<div class="dashboard-container" [class.collapsed]="sidebarCollapsed">
+<div class="dashboard-container" [class.collapsed]="sidebarCollapsed" [class.mobile-open]="mobileMenuOpen">
+
+  <!-- TOPBAR MOBILE -->
+  <div class="mobile-topbar" *ngIf="isMobile">
+
+    <!-- ESQUERDA -->
+    <button class="toggle-line-btn global-toggle" (click)="toggleSidebar()">
+      <span></span>
+    </button>
+
+    <!-- DIREITA -->
+    <div class="mobile-user" routerLink="/profile">
+      <span class="user-name">{{ userName }}</span>
+      <img src="../../../assets/img/ro.jpg" alt="Perfil" />
+    </div>
+
+  </div>
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
 
-    <!-- TOP BUTTONS -->
+    <!-- TOP BUTTONS (IGUAL DESKTOP) -->
     <div class="top-controls">
-      <button class="toggle-line-btn" (click)="toggleSidebar()">
+      <button *ngIf="!isMobile" class="toggle-line-btn" (click)="toggleSidebar()">
         <span></span>
       </button>
 
@@ -28,33 +44,33 @@
     <!-- DIVISOR -->
     <div class="menu-divider"></div>
 
-    <!-- MENU -->
     <nav>
-      <a routerLink="/dashboard" routerLinkActive="active">
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="onMenuClick()">
         <i class="ph ph-gauge"></i>
         <span *ngIf="!sidebarCollapsed">Painel</span>
       </a>
 
-      <a routerLink="/repertoire" routerLinkActive="active">
+      <a routerLink="/repertoire" routerLinkActive="active" (click)="onMenuClick()">
         <i class="ph ph-music-notes"></i>
         <span *ngIf="!sidebarCollapsed">Repertórios</span>
       </a>
 
-      <a routerLink="/schedule" routerLinkActive="active">
+      <a routerLink="/schedule" routerLinkActive="active" (click)="onMenuClick()">
         <i class="ph ph-calendar"></i>
         <span *ngIf="!sidebarCollapsed">Agenda</span>
       </a>
 
-      <a routerLink="/musicas" routerLinkActive="active">
+      <a routerLink="/musicas" routerLinkActive="active" (click)="onMenuClick()">
         <i class="ph ph-music-notes-plus"></i>
         <span *ngIf="!sidebarCollapsed">Músicas</span>
       </a>
 
-      <a routerLink="/profile" routerLinkActive="active">
+      <a routerLink="/profile" routerLinkActive="active" (click)="onMenuClick()">
         <i class="ph ph-user-circle"></i>
         <span *ngIf="!sidebarCollapsed">Perfil</span>
       </a>
     </nav>
+
 
     <!-- LOGOUT -->
     <div class="logout" (click)="logout()">
@@ -64,7 +80,7 @@
 
   </aside>
 
-  <!-- CONTENT AREA (DINÂMICA) -->
+  <!-- CONTENT AREA -->
   <main class="content">
     <router-outlet></router-outlet>
   </main>

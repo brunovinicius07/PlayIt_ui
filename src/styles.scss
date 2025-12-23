@@ -8,7 +8,8 @@
   font-family: "Poppins", sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -24,7 +25,7 @@ html, body {
   line-height: 1.4;
 }
 
-#toast-container > div {
+#toast-container>div {
   padding: 16px 20px !important;
   padding-left: 55px !important;
   border-radius: 10px !important;
@@ -40,7 +41,9 @@ html, body {
   font-size: 22px !important;
 }
 
-.toast-message { font-weight: 500; }
+.toast-message {
+  font-weight: 500;
+}
 
 :root {
   --primary: #7001FD;
@@ -51,8 +54,8 @@ html, body {
   --gray: #EEEEEE;
 
   --bg-dark: #0f0f14;
-  --sidebar-dark: rgba(28,28,37,0.85);
-  --btn-dark: rgba(28,28,37,0.85);
+  --sidebar-dark: rgba(28, 28, 37, 0.85);
+  --btn-dark: rgba(28, 28, 37, 0.85);
   --accent: #b17aff;
   --accent-strong: #9b61ff;
 }
@@ -70,21 +73,22 @@ body.dark-mode {
 body.dark-mode .sidebar {
   background: var(--sidebar-dark) !important;
   backdrop-filter: blur(18px);
-  border-right: 1px solid rgba(255,255,255,0.07) !important;
-  box-shadow: 6px 0 25px rgba(0,0,0,0.45) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 6px 0 25px rgba(0, 0, 0, 0.45) !important;
 }
 
 /* Links */
 body.dark-mode nav a {
   color: #c9c9c9 !important;
 }
+
 body.dark-mode nav a i {
   color: var(--accent-strong) !important;
 }
 
 /* Hover */
 body.dark-mode nav a:hover {
-  background: rgba(155,97,255,0.09) !important;
+  background: rgba(155, 97, 255, 0.09) !important;
   transform: translateX(6px);
 }
 
@@ -93,6 +97,7 @@ body.dark-mode nav a.active {
   background: linear-gradient(135deg, var(--accent-strong), #6f1dff) !important;
   color: white !important;
 }
+
 body.dark-mode nav a.active i {
   color: white !important;
 }
@@ -101,13 +106,23 @@ body.dark-mode nav a.active i {
    🔥 BOTÕES PREMIUM — FINAL
 ========================================================== */
 
-body.dark-mode .toggle-line-btn,
-body.dark-mode .theme-btn {
-  background: var(--btn-dark) !important;       /* preto fosco */
-  border: 1px solid rgba(255,255,255,0.08) !important;
+body.dark-mode .toggle-line-btn {
+  background: var(--btn-dark) !important;
+  /* preto fosco */
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(14px) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
   color: var(--accent) !important;
+}
+
+body.dark-mode .theme-btn,
+body.dark-mode .global-toggle,
+.global-toggle {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body.dark-mode .toggle-line-btn span {
@@ -120,35 +135,36 @@ body.dark-mode .theme-btn i {
 
 body.dark-mode .toggle-line-btn:hover,
 body.dark-mode .theme-btn:hover {
-  background: rgba(20,20,28,0.9) !important;
-  border-color: rgba(255,255,255,0.12) !important;
+  background: rgba(20, 20, 28, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 /* CARDS */
 body.dark-mode .card {
-  background: linear-gradient(
-    145deg,
-    rgba(30,30,40,.85),
-    rgba(20,20,28,.85)
-  ) !important;
-  border: 1px solid rgba(255,255,255,.05);
-  box-shadow: 0 10px 25px rgba(0,0,0,.5);
+  background: linear-gradient(145deg,
+      rgba(30, 30, 40, .85),
+      rgba(20, 20, 28, .85)) !important;
+  border: 1px solid rgba(255, 255, 255, .05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .5);
   color: #eaeaea !important;
 }
 
 /* BANNER */
 body.dark-mode .welcome-banner {
-  background: linear-gradient(
-    120deg,
-    rgba(25,25,35,.85),
-    rgba(18,18,24,.85)
-  ) !important;
-  border: 1px solid rgba(255,255,255,.05);
+  background: linear-gradient(120deg,
+      rgba(25, 25, 35, .85),
+      rgba(18, 18, 24, .85)) !important;
+  border: 1px solid rgba(255, 255, 255, .05);
   backdrop-filter: blur(20px);
 }
 
-body.dark-mode .welcome-text h2 { color: #fff !important; }
-body.dark-mode .welcome-text p { color: #c9c9c9 !important; }
+body.dark-mode .welcome-text h2 {
+  color: #fff !important;
+}
+
+body.dark-mode .welcome-text p {
+  color: #c9c9c9 !important;
+}
 
 /* CONTENT */
 body.dark-mode .content {
@@ -159,6 +175,7 @@ body.dark-mode .content {
 body.dark-mode .logout {
   color: #ff6b6b !important;
 }
+
 body.dark-mode .logout:hover {
-  background: rgba(255,107,107,.1) !important;
+  background: rgba(255, 107, 107, .1) !important;
 }
