@@ -19,9 +19,9 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
 
-    <!-- TOP BUTTONS (IGUAL DESKTOP) -->
+    <!-- TOP BUTTONS -->
     <div class="top-controls">
-      <button *ngIf="!isMobile" class="toggle-line-btn" (click)="toggleSidebar()">
+      <button class="toggle-line-btn" (click)="toggleSidebar()">
         <span></span>
       </button>
 
@@ -39,6 +39,14 @@
       <ng-template #iconMini>
         <img src="assets/img/favicon.png" class="logo-mini" />
       </ng-template>
+    </div>
+
+    <!-- USUÁRIO DESKTOP -->
+    <div class="desktop-user" *ngIf="!isMobile && !sidebarCollapsed">
+      <div class="user-info">
+        <span class="user-name">{{ userName }}</span>
+        <img src="../../../assets/img/ro.jpg" alt="Perfil" />
+      </div>
     </div>
 
     <!-- DIVISOR -->

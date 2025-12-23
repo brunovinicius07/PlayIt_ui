@@ -52,10 +52,11 @@
       TOP BUTTONS
 =============================== */
 .top-controls {
-  display: flex;
+  display: flex !important;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 35px;
+  margin-bottom: 25px;
+  /* Reduzido para dar espaço ao perfil */
   padding-top: 10px;
   gap: 12px;
 }
@@ -65,19 +66,25 @@
   gap: 14px;
 }
 
-.toggle-line-btn {
+.toggle-line-btn,
+.theme-btn {
   width: 42px;
   height: 42px;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   background: transparent !important;
   border: none !important;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: .25s;
   box-shadow: none !important;
+  cursor: pointer;
+  transition: transform .25s;
   position: relative;
+  outline: none !important;
+}
+
+.toggle-line-btn:hover,
+.theme-btn:hover {
+  transform: scale(1.1);
 }
 
 .toggle-line-btn span {
@@ -109,75 +116,31 @@
   top: 7px;
 }
 
-/* ESTADO ABERTO (NÃO COLLAPSED OU MOBILE OPEN) -> ÍCONE X */
-.dashboard-container:not(.collapsed) .toggle-line-btn span,
-.dashboard-container.mobile-open .toggle-line-btn span {
-  background: transparent !important;
+/* DESKTOP ANIMATION: ABERTO (not collapsed) -> X */
+@media (min-width: 939px) {
+
+  /* Menu Aberto -> Vira X */
+  .dashboard-container:not(.collapsed) .toggle-line-btn span {
+    background: transparent !important;
+  }
+
+  .dashboard-container:not(.collapsed) .toggle-line-btn span::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+
+  .dashboard-container:not(.collapsed) .toggle-line-btn span::after {
+    transform: rotate(-45deg);
+    top: 0;
+  }
 }
 
-.dashboard-container:not(.collapsed) .toggle-line-btn span::before,
-.dashboard-container.mobile-open .toggle-line-btn span::before {
-  transform: rotate(45deg);
-  top: 0;
-}
-
-.dashboard-container:not(.collapsed) .toggle-line-btn span::after,
-.dashboard-container.mobile-open .toggle-line-btn span::after {
-  transform: rotate(-45deg);
-  top: 0;
-}
-
-/* USUÁRIO DESKTOP NO SIDEBAR */
-.desktop-user {
-  margin-bottom: 30px;
-  padding: 0 10px;
-  animation: fadeIn .3s ease;
-}
-
-.desktop-user .user-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-body.dark-mode .desktop-user .user-info {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
-.desktop-user .user-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-body.dark-mode .desktop-user .user-name {
-  color: #eee;
-}
-
-.desktop-user img {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--primary);
+.theme-btn i {
+  color: var(--primary);
+  font-size: 22px;
 }
 
 .theme-btn {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: .25s;
-  box-shadow: none;
   pointer-events: auto !important;
   position: relative;
 }
@@ -194,12 +157,82 @@ body.dark-mode .desktop-user .user-name {
 =============================== */
 .logo-area {
   text-align: center;
-  margin-top: 35px;
-  margin-bottom: 35px;
+  margin-top: 25px; // Reduzido
+  margin-bottom: 25px; // Reduzido
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: .3s;
+}
+
+/* ============================
+      USER PROFILE (DESKTOP)
+=============================== */
+.desktop-user {
+  margin-bottom: 25px;
+  padding: 0 4px;
+  animation: slideDown .4s ease-out;
+}
+
+.desktop-user .user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.45);
+  padding: 10px 14px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(112, 1, 253, 0.08);
+  /* Glow roxo suave */
+  transition: .25s;
+}
+
+.desktop-user .user-info:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(112, 1, 253, 0.08);
+}
+
+body.dark-mode .desktop-user .user-info {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-user .user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+body.dark-mode .desktop-user .user-name {
+  color: #f1f1f1;
+}
+
+.desktop-user img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  flex-shrink: 0;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .logo-full {
