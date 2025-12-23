@@ -71,29 +71,100 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  border: 2px solid #ddd;
+  background: transparent !important;
+  border: none !important;
   border-radius: 12px;
   cursor: pointer;
   transition: .25s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+  box-shadow: none !important;
+  position: relative;
 }
 
-/* Vira X quando aberto */
-.dashboard-container.mobile-open .global-toggle span {
+.toggle-line-btn span {
+  width: 22px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 5px;
+  position: relative;
+  transition: .25s;
+}
+
+.toggle-line-btn span::before,
+.toggle-line-btn span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 5px;
+  transition: all .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+.toggle-line-btn span::before {
+  top: -7px;
+}
+
+.toggle-line-btn span::after {
+  top: 7px;
+}
+
+/* ESTADO ABERTO (NÃO COLLAPSED OU MOBILE OPEN) -> ÍCONE X */
+.dashboard-container:not(.collapsed) .toggle-line-btn span,
+.dashboard-container.mobile-open .toggle-line-btn span {
   background: transparent !important;
 }
 
-.dashboard-container.mobile-open .global-toggle span::before {
+.dashboard-container:not(.collapsed) .toggle-line-btn span::before,
+.dashboard-container.mobile-open .toggle-line-btn span::before {
   transform: rotate(45deg);
   top: 0;
-  background: var(--primary) !important;
 }
 
-.dashboard-container.mobile-open .global-toggle span::after {
+.dashboard-container:not(.collapsed) .toggle-line-btn span::after,
+.dashboard-container.mobile-open .toggle-line-btn span::after {
   transform: rotate(-45deg);
   top: 0;
-  background: var(--primary) !important;
+}
+
+/* USUÁRIO DESKTOP NO SIDEBAR */
+.desktop-user {
+  margin-bottom: 30px;
+  padding: 0 10px;
+  animation: fadeIn .3s ease;
+}
+
+.desktop-user .user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+body.dark-mode .desktop-user .user-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.desktop-user .user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+body.dark-mode .desktop-user .user-name {
+  color: #eee;
+}
+
+.desktop-user img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
 }
 
 .theme-btn {
@@ -107,36 +178,6 @@
   cursor: pointer;
   transition: .25s;
   box-shadow: none;
-}
-
-.toggle-line-btn:hover {
-  background: #f4f4f4;
-  transform: scale(1.05);
-}
-
-.theme-btn:hover {
-  transform: scale(1.15);
-  opacity: 0.8;
-}
-
-.toggle-line-btn span {
-  width: 22px;
-  height: 3px;
-  background: var(--primary);
-  border-radius: 5px;
-  transition: .25s;
-}
-
-.dashboard-container.collapsed .toggle-line-btn span {
-  transform: rotate(90deg);
-}
-
-.theme-btn i {
-  color: var(--primary);
-  font-size: 22px;
-}
-
-.theme-btn {
   pointer-events: auto !important;
   position: relative;
 }
