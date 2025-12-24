@@ -5,9 +5,12 @@
     align-items: center;
     /* justify-content: center; -> Removido pois joga muito para baixo */
     /* Centraliza verticalmente */
-    gap: 30px;
-    padding: 30px 20px 30px 20px;
-    /* Balanceado (30px em cima e embaixo) */
+    gap: 15px;
+    /* Reduzido para 15px */
+    padding: 5px 20px 20px 20px;
+    /* Topo puxado para 5px */
+    /* Topo puxado para 10px */
+
     /* min-height removido para não forçar scroll */
     margin-left: 0;
 
@@ -25,7 +28,8 @@
 .card-form {
     background: #ffffff;
     border-radius: 20px;
-    padding: 30px;
+    padding: 20px;
+    /* Reduzido de 30px */
     width: 100%;
     max-width: 600px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -34,7 +38,8 @@
         font-size: 18px;
         font-weight: 800;
         color: #000;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+        /* Reduzido de 20px */
     }
 
     form {
@@ -45,7 +50,8 @@
 
     .form-group input {
         width: 100%;
-        padding: 14px 16px;
+        padding: 12px 16px;
+        /* Reduzido de 14px */
         border: 1px solid #e1e1e1;
         border-radius: 12px;
         background: #f9f9f9;
@@ -100,7 +106,8 @@
     max-width: 600px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    /* Reduzido de 15px */
     max-width: 600px;
     /* Alinha largura com o form */
 
@@ -109,7 +116,8 @@
         justify-content: space-between;
         align-items: center;
         /* Centraliza botão com texto */
-        margin-bottom: -5px;
+        margin-bottom: 0px;
+        /* Reduzido para 0 */
         /* Espaço pequeno */
         width: 100%;
 
@@ -131,7 +139,8 @@
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
-            padding: 12px 22px;
+            padding: 8px 16px;
+            /* Reduzido de 12px 22px */
             border-radius: 10px;
             transition: .2s;
 
@@ -157,7 +166,8 @@
 .list-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+    /* Reduzido de 15px */
 }
 
 /* CARD DE MÚSICA (DARK) */
@@ -167,7 +177,8 @@
     align-items: center;
     background: #2D2D44;
     border-radius: 16px;
-    padding: 20px 25px;
+    padding: 15px 20px;
+    /* Reduzido de 20px 25px */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     transition: .3s;
     cursor: pointer;
@@ -250,62 +261,65 @@
     }
 
     /* ===== DROPDOWN "SOLTO" ===== */
+    /* ===== DROPDOWN "SOLTO" ===== */
     .dropdown-menu {
         position: absolute;
         top: 0;
-        /* Alinha com o topo do ícone */
-        right: 35px;
-        /* Joga para a esquerda do ícone */
+        right: 30px;
+        /* Mais próximo do ícone (-5px) */
         display: flex;
-        flex-direction: row;
-        /* Itens lado a lado? O usuário disse 'abra lado a lado' */
-        /* Mas a imagem mostra lista vertical. 'Lado a lado' deve ser MENU ao lado do ÍCONE. */
-        /* Vou manter vertical (column) pois é um menu dropdown, mas posicionado ao lado. */
         flex-direction: column;
-        gap: 8px;
-        /* Espaço entre os itens */
-        padding: 10px;
+        gap: 5px;
+        /* Menor gap */
+        padding: 5px;
+        /* Menor padding */
         background: transparent;
-        /* Fundo transparente */
         box-shadow: none;
-        /* Sem sombra no container geral */
         z-index: 10020;
-        min-width: 200px;
+        min-width: 140px;
+        /* Menor largura */
         animation: fadeIn 0.1s ease-out;
     }
 
     .dropdown-item {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
+        /* Menor gap */
         background: #ffffff;
-        border-radius: 12px;
-        /* Borda bem arredondada (pill) */
-        padding: 12px 16px;
-        font-weight: 700;
+        border-radius: 8px;
+        /* Cantos menores */
+        padding: 8px 12px;
+        /* Itens mais enxutos */
+        font-weight: 600;
+        font-size: 11px;
+        /* Letra menor */
         color: #222;
         border: none;
         cursor: pointer;
         transition: .2s;
         text-align: left;
         width: 100%;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        /* Sombra em cada item */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        /* Sombra mais suave */
 
         i {
             display: inline-flex;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 26px;
+            /* Ícone menor */
+            height: 26px;
+            border-radius: 6px;
             align-items: center;
             justify-content: center;
             background: #f6f6f6;
             color: #333;
-            font-size: 16px;
+            font-size: 14px;
+            /* Glyph menor */
         }
 
         &:hover {
-            background: #f3f3f3;
+            transform: scale(1.02);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
     }
 
