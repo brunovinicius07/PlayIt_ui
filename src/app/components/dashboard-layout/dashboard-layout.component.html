@@ -41,14 +41,6 @@
       </ng-template>
     </div>
 
-    <!-- USUÁRIO DESKTOP -->
-    <div class="desktop-user" *ngIf="!isMobile && !sidebarCollapsed">
-      <div class="user-info">
-        <span class="user-name">{{ userName }}</span>
-        <img src="../../../assets/img/ro.jpg" alt="Perfil" />
-      </div>
-    </div>
-
     <!-- DIVISOR -->
     <div class="menu-divider"></div>
 
@@ -87,6 +79,14 @@
     </div>
 
   </aside>
+
+  <!-- USUÁRIO DESKTOP (TOP-RIGHT) -->
+  <div class="desktop-user" *ngIf="!isMobile">
+    <div class="user-info" routerLink="/profile">
+      <span class="user-name">{{ userName }}</span>
+      <img src="../../../assets/img/ro.jpg" alt="Perfil" />
+    </div>
+  </div>
 
   <!-- CONTENT AREA -->
   <main class="content">

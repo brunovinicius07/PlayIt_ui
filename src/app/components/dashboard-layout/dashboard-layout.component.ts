@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { DashboardService } from '../../service/dashboard.service';
@@ -22,8 +22,9 @@ export class DashboardLayoutComponent {
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private dashboardService: DashboardService
-  ) {}
+    private dashboardService: DashboardService,
+    private el: ElementRef
+  ) { }
 
   ngOnInit() {
     this.darkMode = localStorage.getItem('theme') === 'dark';
@@ -85,6 +86,25 @@ export class DashboardLayoutComponent {
   onMenuClick() {
     if (this.isMobile) {
       this.mobileMenuOpen = false;
+    }
+  }
+
+  // FECHAR AO CLICAR FORA (SEM OFUSCAR A TELA)
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    if (this.isMobile && this.mobileMenuOpen) {
+      const sidebar = this.el.nativeElement.querySelector('.sidebar');
+      const toggleBtns = this.el.nativeElement.querySelectorAll('.toggle-line-btn');
+
+      let clickedToggle = false;
+      toggleBtns.forEach((btn: any) => {
+        if (btn.contains(event.target)) clickedToggle = true;
+      });
+
+      if (sidebar && !sidebar.contains(event.target) && !clickedToggle) {
+        this.mobileMenuOpen = false;
+        this.cdr.detectChanges();
+      }
     }
   }
 }

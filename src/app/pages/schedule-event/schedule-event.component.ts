@@ -48,12 +48,25 @@ export class ScheduleEventComponent implements OnInit {
 
   newEvent = {
     title: '',
-    opening: '',
-    closure: '',
+    opening: '19:00',
+    closure: '22:00',
     description: ''
   };
 
-  constructor(private scheduleService: ScheduleEventService) {}
+  // 🔥 Novo Seletor de Hora Premium
+  showTimePicker = false;
+  pickingField: 'opening' | 'closure' = 'opening';
+  tempHour = '19';
+  tempMinute = '00';
+
+  hoursList: string[] = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+  minutesList: string[] = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+
+  // Listas repetidas para o efeito de loop infinito
+  loopedHours: string[] = [...this.hoursList, ...this.hoursList, ...this.hoursList];
+  loopedMinutes: string[] = [...this.minutesList, ...this.minutesList, ...this.minutesList];
+
+  constructor(private scheduleService: ScheduleEventService) { }
 
   ngOnInit(): void {
     this.buildCalendar(this.currentMonth, this.currentYear);
@@ -174,6 +187,94 @@ export class ScheduleEventComponent implements OnInit {
     this.editingEventId = null;
     this.apiErrorMessage = null;
     this.resetForm();
+    this.showTimePicker = false;
+  }
+
+  /* ================= CUSTOM TIME PICKER ================= */
+
+  openTimePicker(field: 'opening' | 'closure') {
+    this.pickingField = field;
+    const currentVal = this.newEvent[field];
+
+    if (currentVal) {
+      const parts = currentVal.split(':');
+      this.tempHour = parts[0].padStart(2, '0');
+      this.tempMinute = parts[1].padStart(2, '0');
+    } else {
+      // Default positions if blank
+      this.tempHour = field === 'opening' ? '19' : '22';
+      this.tempMinute = '00';
+    }
+
+    this.showTimePicker = true;
+
+    // Sincroniza o scroll inicial
+    setTimeout(() => {
+      this.syncScrolls();
+    }, 50);
+  }
+
+  // Sincroniza o scroll das listas com os valores de tempHour/tempMinute
+  private syncScrolls() {
+    const lists = document.querySelectorAll('.scroll-list');
+
+    // Altura de cada item: 50px. Centro do container: 110px. 
+    // Offset para centralizar: 110 - 25 = 85px.
+
+    // Hora (posicionamos na cópia do meio para permitir scroll infinito)
+    const hIdx = this.hoursList.indexOf(this.tempHour);
+    if (hIdx !== -1 && lists[0]) {
+      lists[0].scrollTop = (hIdx + 24) * 50 - 85;
+    }
+
+    // Minuto
+    const mIdx = this.minutesList.indexOf(this.tempMinute);
+    if (mIdx !== -1 && lists[1]) {
+      lists[1].scrollTop = (mIdx + 60) * 50 - 85;
+    }
+  }
+
+  selectHour(h: string) {
+    this.tempHour = h;
+    this.syncScrolls();
+  }
+
+  selectMinute(m: string) {
+    this.tempMinute = m;
+    this.syncScrolls();
+  }
+
+  confirmTime() {
+    this.newEvent[this.pickingField] = `${this.tempHour}:${this.tempMinute}`;
+    this.showTimePicker = false;
+  }
+
+  closeTimePicker() {
+    this.showTimePicker = false;
+  }
+
+  onScroll(event: any, type: 'hour' | 'minute') {
+    const el = event.target;
+    const itemHeight = 50;
+    const listCount = type === 'hour' ? 24 : 60;
+
+    // 1. Lógica de Pulo Infinito
+    // Se sair muito do segmento central, reposiciona sem o usuário ver
+    if (el.scrollTop < itemHeight * (listCount - 5)) {
+      el.scrollTop += itemHeight * listCount;
+    } else if (el.scrollTop > itemHeight * (listCount * 2 - 5)) {
+      el.scrollTop -= itemHeight * listCount;
+    }
+
+    // 2. Cálculo do item selecionado (offset 85 para pegar o centro)
+    const itemIndexRaw = Math.round((el.scrollTop + 85) / itemHeight);
+    const val = (type === 'hour' ? this.loopedHours : this.loopedMinutes)[itemIndexRaw];
+
+    if (type === 'hour') {
+      if (val && val !== this.tempHour) this.tempHour = val;
+    } else {
+      if (val && val !== this.tempMinute) this.tempMinute = val;
+    }
   }
 
   saveEvent() {

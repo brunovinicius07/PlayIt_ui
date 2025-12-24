@@ -33,18 +33,11 @@
 
     <div class="calendar-grid">
       <div class="week" *ngFor="let week of weeks">
-        <div
-          *ngFor="let day of week"
-          class="day-box"
-          [class.empty]="!day"
-          [class.has-event]="day && daysWithEvents.includes(day.getDate())"
-          [class.today]="isToday(day)"
-          (click)="day && selectDay(day)"
-        >
+        <div *ngFor="let day of week" class="day-box" [class.empty]="!day"
+          [class.has-event]="day && daysWithEvents.includes(day.getDate())" [class.today]="isToday(day)"
+          (click)="day && selectDay(day)">
           <span *ngIf="day">{{ day.getDate() }}</span>
-          <span
-            *ngIf="day && daysWithEvents.includes(day.getDate())"
-            class="event-dot">
+          <span *ngIf="day && daysWithEvents.includes(day.getDate())" class="event-dot">
           </span>
         </div>
       </div>
@@ -54,10 +47,7 @@
 </div>
 
 <!-- OVERLAY DIA -->
-<div
-  class="day-modal-overlay"
-  *ngIf="showDayModal"
-  (click)="closeDayModal()">
+<div class="day-modal-overlay" *ngIf="showDayModal" (click)="closeDayModal()">
 </div>
 
 <!-- MODAL DO DIA -->
@@ -77,13 +67,9 @@
       Nenhum evento para este dia.
     </div>
 
-    <div
-      class="event-card"
-      *ngFor="let event of eventsOfDay; let i = index">
+    <div class="event-card" *ngFor="let event of eventsOfDay; let i = index">
 
-      <div
-        class="edit-icon"
-        (click)="toggleEventMenu(i, $event)">
+      <div class="edit-icon" (click)="toggleEventMenu(i, $event)">
         <i class="ph ph-pencil-simple-line"></i>
       </div>
 
@@ -97,21 +83,14 @@
       <p class="desc">{{ event.description }}</p>
 
       <!-- MENU DO EVENTO -->
-      <div
-        class="dropdown-menu"
-        *ngIf="openEventMenuIndex === i"
-        (click)="$event.stopPropagation()">
+      <div class="dropdown-menu" *ngIf="openEventMenuIndex === i" (click)="$event.stopPropagation()">
 
-        <button
-          class="dropdown-item"
-          (click)="editEvent(event, $event)">
+        <button class="dropdown-item" (click)="editEvent(event, $event)">
           <i class="ph ph-pencil"></i>
           Editar
         </button>
 
-        <button
-          class="dropdown-item delete"
-          (click)="openDeleteEventModal(event, $event)">
+        <button class="dropdown-item delete" (click)="openDeleteEventModal(event, $event)">
           <i class="ph ph-trash"></i>
           Excluir
         </button>
@@ -127,17 +106,11 @@
 </div>
 
 <!-- OVERLAY MENU -->
-<div
-  class="day-modal-overlay"
-  *ngIf="openEventMenuIndex !== null"
-  (click)="openEventMenuIndex = null">
+<div class="day-modal-overlay" *ngIf="openEventMenuIndex !== null" (click)="openEventMenuIndex = null">
 </div>
 
 <!-- OVERLAY CRIAR / EDITAR -->
-<div
-  class="day-modal-overlay"
-  *ngIf="showCreateModal"
-  (click)="closeCreateModal()">
+<div class="day-modal-overlay" *ngIf="showCreateModal" (click)="closeCreateModal()">
 </div>
 
 <!-- MODAL CRIAR / EDITAR -->
@@ -151,19 +124,22 @@
   </div>
 
   <div class="day-events">
-    <input
-      type="text"
-      placeholder="Título"
-      [(ngModel)]="newEvent.title" />
+    <input type="text" placeholder="Título" [(ngModel)]="newEvent.title" />
 
     <div class="time-row">
-      <input type="time" [(ngModel)]="newEvent.opening" />
-      <input type="time" [(ngModel)]="newEvent.closure" />
+      <div class="time-box" (click)="openTimePicker('opening')">
+        <span class="label">Início</span>
+        <span class="value">{{ newEvent.opening || '--:--' }}</span>
+        <i class="ph ph-clock"></i>
+      </div>
+      <div class="time-box" (click)="openTimePicker('closure')">
+        <span class="label">Fim</span>
+        <span class="value">{{ newEvent.closure || '--:--' }}</span>
+        <i class="ph ph-clock"></i>
+      </div>
     </div>
 
-    <textarea
-      placeholder="Descrição"
-      [(ngModel)]="newEvent.description">
+    <textarea placeholder="Descrição" [(ngModel)]="newEvent.description">
     </textarea>
   </div>
 
@@ -182,10 +158,7 @@
 <!-- MODAL DE EXCLUSÃO EVENTO -->
 <!-- ======================== -->
 
-<div
-  class="delete-overlay"
-  *ngIf="deleteEventModalOpen"
-  (click)="closeDeleteEventModal()">
+<div class="delete-overlay" *ngIf="deleteEventModalOpen" (click)="closeDeleteEventModal()">
 </div>
 
 <div class="delete-modal" *ngIf="deleteEventModalOpen">
@@ -213,4 +186,40 @@
 <div *ngIf="apiErrorMessage" class="api-toast">
   <i class="ph ph-warning-circle"></i>
   {{ apiErrorMessage }}
+</div>
+
+<!-- 🔥 NOVO SELETOR DE HORA PREMIUM -->
+<div class="time-picker-overlay" *ngIf="showTimePicker" (click)="closeTimePicker()"></div>
+
+<div class="time-picker-modal" *ngIf="showTimePicker">
+  <div class="picker-header">
+    <h3>Escolher {{ pickingField === 'opening' ? 'Início' : 'Fim' }}</h3>
+  </div>
+
+  <div class="picker-body">
+    <!-- Coluna de Horas -->
+    <div class="picker-col">
+      <span class="col-label">Hora</span>
+      <div class="scroll-list" (scroll)="onScroll($event, 'hour')">
+        <div *ngFor="let h of loopedHours" class="time-item" [class.active]="tempHour === h">
+          {{ h }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna de Minutos -->
+    <div class="picker-col">
+      <span class="col-label">Minuto</span>
+      <div class="scroll-list" (scroll)="onScroll($event, 'minute')">
+        <div *ngFor="let m of loopedMinutes" class="time-item" [class.active]="tempMinute === m">
+          {{ m }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="picker-actions">
+    <button class="btn-confirm" (click)="confirmTime()">Confirmar</button>
+    <button class="btn-close" (click)="closeTimePicker()">Voltar</button>
+  </div>
 </div>
