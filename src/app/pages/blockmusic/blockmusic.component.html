@@ -2,12 +2,18 @@
 
   <div class="block-top-header">
 
-    <h1 class="rep-title">Repertório: {{ repertoireName }}</h1>
-
     <button class="btn-back-2" (click)="goBack()">
-      <i class="ph ph-arrow-left"></i>
-      Voltar aos Repertórios
+      <i class="ph ph-caret-left"></i>
+      <span>Voltar</span>
     </button>
+
+    <div class="title-wrapper">
+      <span class="eyebrow">Repertório</span>
+      <h1 class="rep-title">{{ repertoireName }}</h1>
+    </div>
+
+    <!-- Espaçador vazio para equilibrar se quiser centralizado, ou apenas remover -->
+    <div style="width: 40px;" class="spacer"></div>
 
   </div>
 
@@ -27,14 +33,8 @@
 
       <div cdkDropList (cdkDropListDropped)="drop($event)" class="cards">
 
-        <div class="card"
-          *ngFor="let block of blocks; let i = index"
-          cdkDrag
-          (cdkDragMoved)="onDrag($event)"
-          [cdkDragDisabled]="openMenuIndex !== null"
-          cdkDragLockAxis="y"
-          (click)="0"
-          [class.open]="openMenuIndex === i">
+        <div class="card" *ngFor="let block of blocks; let i = index" cdkDrag (cdkDragMoved)="onDrag($event)"
+          [cdkDragDisabled]="openMenuIndex !== null" cdkDragLockAxis="y" (click)="0" [class.open]="openMenuIndex === i">
 
 
           <!-- Lápis -->
@@ -46,9 +46,7 @@
           <p>{{ block.musics?.length || 0 }} músicas</p>
 
           <!-- Menu -->
-          <div class="dropdown-menu"
-               *ngIf="openMenuIndex === i"
-               (click)="$event.stopPropagation()">
+          <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
 
             <!-- ABRIR -->
             <button class="dropdown-item" (click)="openBlock(block.idBlockMusic, $event)">
@@ -61,11 +59,9 @@
             </button>
 
             <!-- COPIAR LINK -->
-            <button class="dropdown-item"
-                    [class.copied]="copiedId === block.idBlockMusic"
-                    (click)="copyLink(block.idBlockMusic, $event)">
-              <i class="ph"
-                [class.ph-check-circle]="copiedId === block.idBlockMusic"
+            <button class="dropdown-item" [class.copied]="copiedId === block.idBlockMusic"
+              (click)="copyLink(block.idBlockMusic, $event)">
+              <i class="ph" [class.ph-check-circle]="copiedId === block.idBlockMusic"
                 [class.ph-link]="copiedId !== block.idBlockMusic"></i>
               {{ copiedId === block.idBlockMusic ? 'Link copiado!' : 'Copiar link' }}
             </button>
@@ -88,9 +84,7 @@
   <!-- ====================================== -->
   <!-- 🔥 OVERLAY GLOBAL DO MENU (CORRETO!)   -->
   <!-- ====================================== -->
-  <div class="menu-overlay"
-       *ngIf="openMenuIndex !== null"
-       (click)="closeMenu()">
+  <div class="menu-overlay" *ngIf="openMenuIndex !== null" (click)="closeMenu()">
   </div>
 
 
@@ -106,12 +100,7 @@
     </h2>
 
     <form [formGroup]="form" class="modal-form">
-      <input
-        type="text"
-        formControlName="nameBlockMusic"
-        placeholder="Nome do bloco"
-        class="modal-input"
-      />
+      <input type="text" formControlName="nameBlockMusic" placeholder="Nome do bloco" class="modal-input" />
     </form>
 
     <div class="modal-actions">
@@ -126,14 +115,10 @@
   <!-- ====================================== -->
   <!-- 🔥 MODAL EXCLUSÃO RESTAURADO -->
   <!-- ====================================== -->
-  <div class="delete-overlay"
-       *ngIf="deleteModalOpen"
-       (click)="closeDeleteModal()">
+  <div class="delete-overlay" *ngIf="deleteModalOpen" (click)="closeDeleteModal()">
   </div>
 
-  <div class="delete-modal"
-       *ngIf="deleteModalOpen"
-       (click)="$event.stopPropagation()">
+  <div class="delete-modal" *ngIf="deleteModalOpen" (click)="$event.stopPropagation()">
 
     <h2>Excluir Bloco</h2>
 

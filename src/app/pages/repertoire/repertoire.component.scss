@@ -1,8 +1,13 @@
-/* ===== container geral ===== */
 .repertorios-wrapper {
   padding: 30px 30px 10px 60px;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 938px) {
+    padding: 0 5px 5px 5px;
+    /* Remove padding topo completamente */
+    /* Sobe bem o conteudo e alarga totalmente */
+  }
 }
 
 /* ===== CARDZÃO (BOARD) ===== */
@@ -14,6 +19,13 @@
   padding: 25px;
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.09);
   min-height: auto;
+
+  @media (max-width: 480px) {
+    padding: 10px 10px;
+    /* Reduz padding top/bottom */
+    /* Menos padding interno para caber mais coisa */
+    border-radius: 12px;
+  }
 }
 
 /* topo do board */
@@ -28,6 +40,21 @@
   font-size: 32px;
   font-weight: 800;
   margin: 0;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+    /* Título levemente menor no mobile geral */
+  }
+
+  @media (max-width: 380px) {
+    font-size: 20px;
+    /* Para telas < 380px */
+  }
+
+  @media (max-width: 360px) {
+    font-size: 19px;
+  }
 }
 
 /* botão criar */
@@ -40,16 +67,36 @@
   cursor: pointer;
   font-weight: 600;
   transition: .3s;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    padding: 8px 14px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 360px) {
+    padding: 6px 10px;
+    /* Botão mais compacto */
+    font-size: 11px;
+  }
 }
 
 /* ===== área scrollável ===== */
 .scroll-container {
-  margin-top: 25px;
+  margin-top: 15px;
+  /* Reduz margem topo da lista */
   max-height: 520px;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   padding: 6px 8px 8px 0;
+
+  @media (max-width: 600px) {
+    /* Altura dinâmica para caber na tela sem rolar a página em si */
+    /* 100vh - (padding wrapper/board + header + margens) approx 140px */
+    max-height: calc(100vh - 160px);
+  }
 }
 
 /* scrollbar */
@@ -87,6 +134,17 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
   transition: transform .2s, box-shadow .2s, z-index .01s;
   z-index: 1;
+
+  @media (max-width: 480px) {
+    height: 120px;
+    /* Altura reduzida para 120px para caber mais itens */
+    /* Altura reduzida para mobile */
+    padding: 15px;
+
+    h3 {
+      font-size: 18px;
+    }
+  }
 
   &:hover {
     transform: translateY(-4px);
@@ -417,6 +475,10 @@
   width: 100% !important;
   border-radius: 18px;
   opacity: 0 !important;
+
+  @media (max-width: 480px) {
+    height: 135px !important;
+  }
 }
 
 .cdk-drop-list.cdk-drop-list-dragging .card:not(.cdk-drag-placeholder) {

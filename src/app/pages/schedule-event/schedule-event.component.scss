@@ -962,6 +962,9 @@
   flex-direction: column;
   scroll-snap-type: y mandatory;
   height: 100%;
+  user-select: none;
+  /* Impede seleção de texto ao arrastar */
+  cursor: pointer;
 
   &::-webkit-scrollbar {
     display: none;

@@ -66,6 +66,11 @@ export class ScheduleEventComponent implements OnInit {
   loopedHours: string[] = [...this.hoursList, ...this.hoursList, ...this.hoursList];
   loopedMinutes: string[] = [...this.minutesList, ...this.minutesList, ...this.minutesList];
 
+  // Drag variables for desktop
+  private isDragging = false;
+  private startY = 0;
+  private startScrollTop = 0;
+
   constructor(private scheduleService: ScheduleEventService) { }
 
   ngOnInit(): void {
@@ -275,6 +280,52 @@ export class ScheduleEventComponent implements OnInit {
     } else {
       if (val && val !== this.tempMinute) this.tempMinute = val;
     }
+  }
+
+  /* ================= DESKTOP OPTIMIZATIONS ================= */
+
+  onWheel(event: WheelEvent) {
+    event.preventDefault();
+    const el = event.currentTarget as HTMLElement;
+    const direction = event.deltaY > 0 ? 1 : -1;
+    const itemHeight = 50;
+
+    // Move exatamente um item por tick do scroll
+    el.scrollBy({
+      top: direction * itemHeight,
+      behavior: 'smooth'
+    });
+  }
+
+  // Permite arrastar com o mouse no desktop
+  onMouseDown(event: MouseEvent) {
+    this.isDragging = true;
+    const el = event.currentTarget as HTMLElement;
+    this.startY = event.pageY - el.offsetTop;
+    this.startScrollTop = el.scrollTop;
+    el.style.cursor = 'grabbing';
+    el.style.scrollSnapType = 'none'; // Desativa snap durante o arraste para fluidez
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (!this.isDragging) return;
+    event.preventDefault();
+    const el = event.currentTarget as HTMLElement;
+    const y = event.pageY - el.offsetTop;
+    const walk = (y - this.startY) * 1.5; // Multiplicador de velocidade
+    el.scrollTop = this.startScrollTop - walk;
+  }
+
+  onMouseUp(event: MouseEvent) {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    const el = event.currentTarget as HTMLElement;
+    el.style.cursor = 'pointer';
+    el.style.scrollSnapType = 'y mandatory'; // Reativa snap para travar no lugar certo
+  }
+
+  onMouseLeave(event: MouseEvent) {
+    this.onMouseUp(event);
   }
 
   saveEvent() {

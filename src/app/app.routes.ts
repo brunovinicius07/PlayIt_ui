@@ -21,6 +21,8 @@ import { ScheduleEventComponent } from './pages/schedule-event/schedule-event.co
 
 
 
+import { MusicComponent } from './pages/music/music.component';
+
 export const routes: Routes = [
 
   { path: "login", component: LoginComponent },
@@ -40,7 +42,7 @@ export const routes: Routes = [
 
       { path: "repertoire/:id/blockmusic", component: BlockMusicComponent },
 
-      { path: "musicas", component: PlaceholderComponent },
+      { path: "music", component: MusicComponent },
 
       { path: "schedule", component: ScheduleEventComponent },
 

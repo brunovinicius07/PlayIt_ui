@@ -1,0 +1,69 @@
+<div class="music-wrapper">
+
+    <!-- LEFT/TOP: FORM -->
+    <div class="card-form">
+        <h2>Adicionar Nova Música</h2>
+        <form [formGroup]="form" (ngSubmit)="addMusic()">
+
+            <div class="form-group">
+                <input type="text" formControlName="musicName" placeholder="Nome da Música">
+            </div>
+
+            <div class="form-group">
+                <input type="text" formControlName="artistName" placeholder="Nome do Artista">
+            </div>
+
+            <button type="submit" class="btn-primary" [disabled]="form.invalid">
+                Buscar e Adicionar
+            </button>
+
+        </form>
+    </div>
+
+
+    <!-- RIGHT/BOTTOM: LIST -->
+    <div class="card-list-wrapper">
+        <div class="list-header">
+            <h2>Últimas Adicionadas</h2>
+            <button class="btn-all-musics">Todas Músicas</button>
+        </div>
+
+        <div class="list-container">
+            <div *ngFor="let music of myMusics; let i = index" class="music-card"
+                [class.active-card]="openMenuIndex === i">
+                <div class="info">
+                    <div class="music-name">{{ music.name }} <span class="music-tone">- Tom: {{ music.tone }}</span>
+                    </div>
+                    <div class="artist-name">- {{ music.artist }}</div>
+                </div>
+
+                <!-- MENU DE AÇÕES -->
+                <div class="action-wrapper">
+                    <div class="edit-icon" (click)="toggleMenu(i, $event)">
+                        <i class="ph ph-pencil-simple-line"></i>
+                    </div>
+
+                    <!-- DROPDOWN -->
+                    <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
+                        <button class="dropdown-item" (click)="openMusic(music)">
+                            <i class="ph ph-browser"></i> Abrir
+                        </button>
+
+                        <button class="dropdown-item" [class.copied]="copiedId === i"
+                            (click)="copyLink(music, i, $event)">
+                            <i class="ph" [ngClass]="copiedId === i ? 'ph-check-circle' : 'ph-link'"></i>
+                            {{ copiedId === i ? 'Link copiado!' : 'Copiar Link' }}
+                        </button>
+
+                        <button class="dropdown-item delete" (click)="deleteMusic(i, $event)">
+                            <i class="ph ph-trash"></i> Excluir
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

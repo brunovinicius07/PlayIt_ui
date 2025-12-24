@@ -592,7 +592,8 @@ body.dark-mode .menu-divider {
   .content {
     padding-left: 16px !important;
     padding-right: 16px !important;
-    padding-top: 90px !important;
+    padding-top: 70px !important;
+    /* Reduzido de 90px para 70px para subir o conteúdo */
   }
 }
 
@@ -645,7 +646,7 @@ body.dark-mode .menu-divider {
   }
 
   .content {
-    padding-top: 74px !important;
+    padding-top: 65px !important;
   }
 
   body.mobile-menu-open::after {
@@ -694,7 +695,7 @@ body.dark-mode .menu-divider {
   }
 
   .content {
-    padding-top: 74px !important;
+    padding-top: 65px !important;
   }
 
   body.mobile-menu-open::after {
