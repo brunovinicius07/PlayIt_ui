@@ -25,12 +25,12 @@
     <div class="card-list-wrapper">
         <div class="list-header">
             <h2>Últimas Adicionadas</h2>
-            <button class="btn-all-musics">Todas Músicas</button>
+            <button class="btn-all-musics" (click)="goToLibrary()">Todas Músicas</button>
         </div>
 
         <div class="list-container">
             <div *ngFor="let music of myMusics; let i = index" class="music-card"
-                [class.active-card]="openMenuIndex === i">
+                [class.active-card]="openMenuIndex === i" (click)="openMusic(music)">
                 <div class="info">
                     <div class="music-name">{{ music.name }} <span class="music-tone">- Tom: {{ music.tone }}</span>
                     </div>
@@ -55,9 +55,7 @@
                             {{ copiedId === i ? 'Link copiado!' : 'Copiar Link' }}
                         </button>
 
-                        <button class="dropdown-item delete" (click)="deleteMusic(i, $event)">
-                            <i class="ph ph-trash"></i> Excluir
-                        </button>
+
                     </div>
                 </div>
 

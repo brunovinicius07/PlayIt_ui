@@ -34,7 +34,8 @@
       <div cdkDropList (cdkDropListDropped)="drop($event)" class="cards">
 
         <div class="card" *ngFor="let block of blocks; let i = index" cdkDrag (cdkDragMoved)="onDrag($event)"
-          [cdkDragDisabled]="openMenuIndex !== null" cdkDragLockAxis="y" (click)="0" [class.open]="openMenuIndex === i">
+          [cdkDragDisabled]="openMenuIndex !== null" cdkDragLockAxis="y" (click)="openBlock(block.idBlockMusic)"
+          [class.open]="openMenuIndex === i">
 
 
           <!-- Lápis -->
@@ -43,7 +44,7 @@
           </div>
 
           <h3>{{ block.nameBlockMusic }}</h3>
-          <p>{{ block.musics?.length || 0 }} músicas</p>
+          <p>{{ block.musics?.length || block.idMusics?.length || 0 }} músicas</p>
 
           <!-- Menu -->
           <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">

@@ -1,0 +1,62 @@
+<div class="music-list-wrapper">
+    <div class="list-header">
+        <div class="title-row">
+            <button class="btn-back" (click)="goBack()">
+                <i class="ph ph-arrow-left"></i>
+            </button>
+            <h2>Sua Lista de Músicas</h2>
+        </div>
+    </div>
+
+    <div class="list-container">
+        <div *ngFor="let music of myMusics; let i = index" class="music-card" [class.active-card]="openMenuIndex === i"
+            (click)="openMusic(music)">
+            <div class="info">
+                <div class="music-name">{{ music.name }} <span class="music-tone">- Tom: {{ music.tone }}</span>
+                </div>
+                <div class="artist-name">- {{ music.artist }}</div>
+            </div>
+
+            <!-- ACTION MENU -->
+            <div class="action-wrapper">
+                <div class="edit-icon" (click)="toggleMenu(i, $event)">
+                    <i class="ph ph-pencil-simple-line"></i>
+                </div>
+
+                <!-- DROPDOWN -->
+                <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
+                    <button class="dropdown-item" (click)="openMusic(music)">
+                        <i class="ph ph-browser"></i> Abrir
+                    </button>
+
+                    <button class="dropdown-item" [class.copied]="copiedId === i" (click)="copyLink(music, i, $event)">
+                        <i class="ph" [ngClass]="copiedId === i ? 'ph-check-circle' : 'ph-link'"></i>
+                        {{ copiedId === i ? 'Link copiado!' : 'Copiar Link' }}
+                    </button>
+
+                    <button class="dropdown-item delete" (click)="deleteMusic(music, $event)">
+                        <i class="ph ph-trash"></i> Excluir
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" *ngIf="showDeleteModal">
+    <div class="modal-card">
+        <div class="modal-icon">
+            <i class="ph ph-trash"></i>
+        </div>
+        <h3>Excluir Música?</h3>
+        <p>Tem certeza que deseja excluir <strong>{{ musicToDelete?.name }}</strong>? Essa ação não pode ser desfeita.
+        </p>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" (click)="cancelDelete()">Cancelar</button>
+            <button class="btn-confirm" (click)="confirmDelete()">Excluir</button>
+        </div>
+    </div>
+</div>

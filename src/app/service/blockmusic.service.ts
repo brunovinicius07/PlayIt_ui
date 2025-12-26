@@ -10,7 +10,7 @@ export class BlockMusicService {
   private apiUrl = 'http://localhost:8080/v1/music/block_music';
   private apiUrlRepertoire = 'http://localhost:8080/v1/music/repertoire';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth-token');
@@ -70,6 +70,18 @@ export class BlockMusicService {
     return this.http.get(`${this.apiUrlRepertoire}/${id}`, {
       headers: this.getHeaders()
     });
+  }
+
+  addMusicToBlock(idBlockMusic: number, idUserMusic: number): Observable<any> {
+    const payload = {
+      idBlockMusic: idBlockMusic,
+      idUserMusic: idUserMusic
+    };
+    return this.http.put(`${this.apiUrl}/link-music-to-block`, payload, { headers: this.getHeaders() });
+  }
+
+  removeMusicFromBlock(idBlockMusic: number, idUserMusic: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/removeMusic/${idBlockMusic}/${idUserMusic}`, { headers: this.getHeaders() });
   }
 }
 

@@ -107,4 +107,7 @@ export class DashboardLayoutComponent {
       }
     }
   }
+  isMusicActive(): boolean {
+    return this.router.url.startsWith('/music') || this.router.url.startsWith('/library');
+  }
 }

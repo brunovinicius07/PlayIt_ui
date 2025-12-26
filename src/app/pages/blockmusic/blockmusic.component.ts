@@ -40,7 +40,7 @@ export class BlockMusicComponent implements OnInit {
     private route: ActivatedRoute,
     private blockService: BlockMusicService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.idRepertoire = Number(this.route.snapshot.paramMap.get('id'));
@@ -206,7 +206,7 @@ export class BlockMusicComponent implements OnInit {
 
   openBlock(idBlock: number, event?: MouseEvent) {
     event?.stopPropagation();
-    console.log("Abrir bloco:", idBlock);
+    this.router.navigate(['/repertoire', this.idRepertoire, 'blockmusic', idBlock]);
   }
 
   copyLink(id: number, event?: MouseEvent) {

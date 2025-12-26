@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MusicService } from '../../service/music.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-music',
@@ -9,22 +11,22 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
     templateUrl: './music.component.html',
     styleUrls: ['./music.component.scss']
 })
-export class MusicComponent {
+export class MusicComponent implements OnInit {
 
     form: FormGroup;
 
-    // Mock initial data
-    myMusics = [
-        { name: 'Sigilo', artist: 'Roberta Reis', tone: 'F#' },
-        { name: 'Morena', artist: 'Luan Santana', tone: 'F#' },
-        { name: 'Cobaia', artist: 'Lauana Prado', tone: 'F#' }
-    ];
+    // Data from backend
+    myMusics: any[] = [];
 
     // State for menu
     openMenuIndex: number | null = null;
     copiedId: number | null = null;
 
-    constructor(private fb: FormBuilder) {
+    constructor(
+        private fb: FormBuilder,
+        private musicService: MusicService,
+        private router: Router
+    ) {
         this.form = this.fb.group({
             musicName: ['', Validators.required],
             artistName: ['', Validators.required]
@@ -38,6 +40,35 @@ export class MusicComponent {
         });
     }
 
+    ngOnInit(): void {
+        this.loadMusics();
+    }
+
+    loadMusics() {
+        this.musicService.getLibrary().subscribe({
+            next: (response) => {
+                // Determine structure. Assuming response is list of objects with { music: { name, artist }, personalTone, idUserMusic }
+                // Sort by idUserMusic desc to show latest
+                const sorted = response.sort((a: any, b: any) => b.idUserMusic - a.idUserMusic);
+
+                // Take top 3
+                const top3 = sorted.slice(0, 3);
+
+                // Map to UI structure
+                this.myMusics = top3.map((m: any) => ({
+                    name: m.music.nameMusic,
+                    artist: m.music.artist,
+                    tone: m.personalTone,
+                    // Keep original object if needed
+                    ...m
+                }));
+            },
+            error: (err) => {
+                console.error('Error loading library', err);
+            }
+        });
+    }
+
     toggleMenu(index: number, event: MouseEvent) {
         event.stopPropagation();
         if (this.openMenuIndex === index) {
@@ -48,20 +79,13 @@ export class MusicComponent {
     }
 
     openMusic(music: any) {
-        // Formato Cifra Club: /artista/musica/
-        const artistSlug = this.generateSlug(music.artist);
-        const musicSlug = this.generateSlug(music.name);
-        // Garante ordem: Artista -> Música
-        const url = `https://www.cifraclub.com.br/${artistSlug}/${musicSlug}/`;
-        window.open(url, '_blank');
+        this.router.navigate(['/music/cipher', music.idUserMusic], { queryParams: { from: 'dashboard' } });
         this.openMenuIndex = null;
     }
 
     copyLink(music: any, index: number, event: MouseEvent) {
         event.stopPropagation();
-        const artistSlug = this.generateSlug(music.artist);
-        const musicSlug = this.generateSlug(music.name);
-        const url = `https://www.cifraclub.com.br/${artistSlug}/${musicSlug}/`;
+        const url = `${window.location.origin}/music/cipher/${music.idUserMusic}?from=dashboard`;
 
         navigator.clipboard.writeText(url);
         this.copiedId = index;
@@ -73,6 +97,7 @@ export class MusicComponent {
 
     deleteMusic(index: number, event: MouseEvent) {
         event.stopPropagation();
+        // Visual delete only for now as requested
         this.myMusics.splice(index, 1);
         this.openMenuIndex = null;
     }
@@ -90,19 +115,28 @@ export class MusicComponent {
         const cifraClubUrl = `https://www.cifraclub.com.br/${artistSlug}/${musicSlug}/`;
         console.log(`URL Gerada: ${cifraClubUrl}`);
 
-        // Simulate Add (with formatted text)
-        this.myMusics.unshift({
-            name: this.toTitleCase(musicName),
-            artist: this.toTitleCase(artistName),
-            tone: 'F#' // Mockado
+        this.musicService.addMusic(cifraClubUrl).subscribe({
+            next: (response) => {
+                const newMusic = {
+                    name: response.music.nameMusic,
+                    artist: response.music.artist,
+                    tone: response.personalTone,
+                    ...response
+                };
+
+                this.myMusics.unshift(newMusic);
+
+                // Keep only top 3
+                if (this.myMusics.length > 3) {
+                    this.myMusics.pop();
+                }
+
+                this.form.reset();
+            },
+            error: (err) => {
+                console.error('Error adding music', err);
+            }
         });
-
-        // Keep only top 3
-        if (this.myMusics.length > 3) {
-            this.myMusics.pop();
-        }
-
-        this.form.reset();
     }
 
     toTitleCase(str: string): string {
@@ -126,5 +160,9 @@ export class MusicComponent {
             .replace(/[^\w\-]+/g, '')
             .replace(/\-\-+/g, '-')
             .trim();
+    }
+
+    goToLibrary() {
+        this.router.navigate(['/library']);
     }
 }

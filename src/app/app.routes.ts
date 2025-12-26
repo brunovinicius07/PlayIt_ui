@@ -16,12 +16,15 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 
 import { RepertoireComponent } from './pages/repertoire/repertoire.component';
 import { BlockMusicComponent } from './pages/blockmusic/blockmusic.component';
+import { BlockDetailComponent } from './pages/block-detail/block-detail.component';
 
 import { ScheduleEventComponent } from './pages/schedule-event/schedule-event.component';
 
 
 
 import { MusicComponent } from './pages/music/music.component';
+import { MusicListComponent } from './pages/music-list/music-list.component';
+import { MusicCipherComponent } from './pages/music-cipher/music-cipher.component';
 
 export const routes: Routes = [
 
@@ -41,8 +44,11 @@ export const routes: Routes = [
       { path: "repertoire", component: RepertoireComponent },
 
       { path: "repertoire/:id/blockmusic", component: BlockMusicComponent },
+      { path: "repertoire/:id/blockmusic/:idBlock", component: BlockDetailComponent },
 
       { path: "music", component: MusicComponent },
+      { path: "music/cipher/:id", component: MusicCipherComponent },
+      { path: "library", component: MusicListComponent },
 
       { path: "schedule", component: ScheduleEventComponent },
 

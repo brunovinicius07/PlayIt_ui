@@ -1,0 +1,51 @@
+<div class="cipher-wrapper" *ngIf="music">
+
+    <!-- HEADER & CONTROLS (FIXED) -->
+    <div class="header-section">
+        <div class="header">
+            <button class="btn-back" (click)="goBack()">
+                <i class="ph ph-arrow-left"></i>
+            </button>
+
+            <div class="title-info">
+                <h1>{{ music.name }}</h1>
+                <h2>{{ music.artist }}</h2>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="tone-selector">
+                <span class="label">Tom: </span>
+                <div class="current-tone" (click)="toggleToneSelector()">
+                    {{ music.tone }}
+                </div>
+
+                <!-- OVERLAY (INVISIBLE) TO CLOSE -->
+                <div class="overlay-tone" *ngIf="showToneSelector" (click)="toggleToneSelector()"></div>
+
+                <!-- DROPDOWN -->
+                <div class="tone-dropdown" *ngIf="showToneSelector">
+                    <div class="tones-grid">
+                        <div class="tone-item" *ngFor="let t of tones" [class.active]="t === music.tone"
+                            (click)="changeTone(t)">
+                            {{ t }}
+                        </div>
+                    </div>
+                    <div class="dropdown-footer">
+                        <button class="btn-restore" (click)="restoreOriginal()">
+                            Restaurar tom inicial
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT (SCROLLABLE CARD) -->
+    <div class="cipher-card">
+        <div class="scroll-area">
+            <pre [innerHTML]="music.cipher"></pre>
+        </div>
+    </div>
+
+</div>

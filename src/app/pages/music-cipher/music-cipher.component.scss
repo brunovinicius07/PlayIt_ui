@@ -1,0 +1,262 @@
+.cipher-wrapper {
+    /* Ajuste de altura para evitar rolagem da página principal (Dashboard Header + Padding) */
+    /* Valor conservador para garantir que cabe na tela sem rolar o pai */
+    height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 20px 20px;
+    /* Topo zerado para subir conteudo */
+    gap: 5px;
+
+    @media (min-width: 939px) {
+        margin-left: 60px;
+        padding: 0 40px 20px 40px;
+    }
+}
+
+.header-section {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 1200px;
+    /* Alinha com o card */
+    margin: 0 auto;
+    /* Centraliza */
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+    /* Reduzido ainda mais */
+
+    .btn-back {
+        background: #8A2BE2;
+        /* Purple solid */
+        border: none;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: .2s;
+        box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
+
+        &:hover {
+            background: #7223bd;
+            transform: translateX(-2px);
+        }
+
+        i {
+            font-size: 20px;
+        }
+    }
+
+    .title-info {
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+            margin-bottom: 2px;
+            color: #000;
+            /* Preto */
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #8A2BE2;
+            /* Roxo */
+        }
+    }
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.tone-selector {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .label {
+        font-size: 14px;
+        color: #666;
+        font-weight: 600;
+        margin-right: -5px;
+        /* Pull tone closer */
+    }
+
+    .current-tone {
+        font-size: 18px;
+        font-weight: 800;
+        color: #8A2BE2;
+        /* Roxo */
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        /* No gap needed if icon removed */
+        padding: 0;
+        border: none;
+        background: transparent;
+        transition: .2s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.tone-dropdown {
+    position: absolute;
+    top: -5px;
+    left: 70px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    min-width: 260px;
+    /* Slightly wider */
+
+    .tones-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .tone-item {
+        padding: 8px;
+        text-align: center;
+        background: #fff;
+        /* Default white */
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        /* User requested light purple text for unselected state */
+        color: #8A2BE2;
+        transition: .2s;
+
+        &:hover {
+            background: #f3e5f5;
+            /* Light purple hover */
+            border-color: #d1c4e9;
+            color: #8A2BE2;
+        }
+
+        &.active {
+            background: #8A2BE2;
+            color: #fff;
+            border-color: #8A2BE2;
+        }
+    }
+
+    .dropdown-footer {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+
+        .btn-restore {
+            width: 100%;
+            background: #fff;
+            border: 1px solid #ddd;
+            color: #8A2BE2;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .2s;
+
+            &:hover {
+                background: #f5f5f5;
+                color: #333;
+                border-color: #ccc;
+            }
+        }
+    }
+}
+
+/* SCROLLABLE CARD */
+.cipher-card {
+    flex-grow: 1;
+    background: #ffffff;
+    /* Fundo branco conforme pedido */
+    border-radius: 20px;
+    overflow: hidden;
+    /* Para o radius */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    max-width: 1200px;
+    /* Mais largo */
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #f0f0f0;
+
+    .scroll-area {
+        height: 100%;
+        overflow-y: auto;
+        padding: 30px;
+
+        /* Custom Scrollbar */
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #d1d1d1;
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    }
+
+    /* ESTILO DA CIFRA */
+    ::ng-deep pre {
+        /* ng-deep para pegar o innerHTML */
+        font-family: 'Roboto Mono', monospace;
+        font-size: 16px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        color: #000000;
+        /* Letras pretas */
+        margin: 0;
+
+        b {
+            color: #8A2BE2;
+            /* Cifras roxas */
+            font-weight: 700;
+        }
+    }
+}
+
+/* OVERLAY for Dropdown */
+.overlay-tone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99;
+    background: transparent;
+    cursor: default;
+}

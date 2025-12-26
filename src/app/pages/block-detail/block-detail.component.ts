@@ -1,0 +1,223 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BlockMusicService } from '../../service/blockmusic.service';
+import { MusicService } from '../../service/music.service';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
+
+@Component({
+    selector: 'app-block-detail',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './block-detail.component.html',
+    styleUrls: ['./block-detail.component.scss']
+})
+export class BlockDetailComponent implements OnInit {
+
+    idRepertoire!: number;
+    idBlock!: number;
+    blockName: string = '';
+    repertoireName: string = '';
+
+    musics: any[] = [];
+    library: any[] = [];
+    filteredLibrary: any[] = [];
+
+    openMenuIndex: number | null = null;
+
+    // Modals
+    showAddModal = false;
+    showRemoveModal = false;
+    musicToRemove: any = null;
+
+    searchControl = new FormControl('');
+
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private blockService: BlockMusicService,
+        private musicService: MusicService
+    ) {
+        // Close menu on outside click
+        window.addEventListener('click', (e: any) => {
+            if (e.target.closest('.dropdown-menu') || e.target.closest('.edit-icon')) return;
+            this.openMenuIndex = null;
+        });
+    }
+
+    ngOnInit(): void {
+        this.idRepertoire = Number(this.route.snapshot.paramMap.get('id'));
+        this.idBlock = Number(this.route.snapshot.paramMap.get('idBlock'));
+
+        this.loadBlockData();
+
+        this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(val => {
+            this.filterLibrary(val || '');
+        });
+    }
+
+    loadBlockData() {
+        this.blockService.getOne(this.idBlock).subscribe({
+            next: (block: any) => {
+                this.blockName = block.nameBlockMusic;
+                this.idRepertoire = block.idRepertoire;
+
+                // Backend might return 'musics' (new DTO) or 'items' (old DTO)
+                const rawMusics = block.musics || block.items || [];
+                this.musics = rawMusics.map((m: any) => {
+                    // Robust Mapping Strategy
+
+                    // 1. Identify where the 'music' details are (Name, Artist)
+                    // Priority: m.music (Screenshot) > m.userMusic.music (Legacy) > m (Flat)
+                    const musicDetails = m.music || (m.userMusic ? m.userMusic.music : null) || m;
+
+                    // 2. Identify where the 'user' specific details are (Tone, ID)
+                    // Priority: m (Screenshot - root has personalTone) > m.userMusic (Legacy)
+                    const userDetails = m.userMusic || m;
+
+                    return {
+                        name: musicDetails.nameMusic || musicDetails.musicName || '',
+                        artist: musicDetails.artist || musicDetails.artistName || musicDetails.singer || '',
+                        tone: userDetails.personalTone || userDetails.tom || userDetails.tone || '',
+                        idUserMusic: userDetails.idUserMusic || musicDetails.idUserMusic,
+                        ...m
+                    };
+                });
+            },
+            error: () => console.error('Erro ao carregar bloco')
+        });
+
+        this.blockService.getRepertoireById(this.idRepertoire).subscribe({
+            next: (rep: any) => this.repertoireName = rep.nameRepertoire
+        });
+    }
+
+    goBack() {
+        this.router.navigate(['/repertoire', this.idRepertoire, 'blockmusic']);
+    }
+
+    copiedId: number | null = null;
+
+    // ...
+
+    // MENUS
+    toggleMenu(index: number, event: MouseEvent) {
+        event.stopPropagation();
+        this.openMenuIndex = this.openMenuIndex === index ? null : index;
+    }
+
+    openMusic(music: any) {
+        // Navigate to cipher with context
+        this.router.navigate(['/music/cipher', music.idUserMusic], {
+            queryParams: { from: 'block', blockId: this.idBlock, repertoireId: this.idRepertoire }
+        });
+    }
+
+    copyLink(music: any, index: number, event: MouseEvent) {
+        event.stopPropagation();
+        const url = `${window.location.origin}/music/cipher/${music.idUserMusic}?from=block&blockId=${this.idBlock}&repertoireId=${this.idRepertoire}`;
+
+        navigator.clipboard.writeText(url);
+        this.copiedId = index;
+
+        setTimeout(() => {
+            this.copiedId = null;
+        }, 2000);
+    }
+
+    // ADD MUSIC
+    openAddModal() {
+        this.showAddModal = true;
+        this.loadLibrary();
+    }
+
+    closeAddModal() {
+        this.showAddModal = false;
+        this.searchControl.setValue('');
+    }
+
+    loadLibrary() {
+        this.musicService.getLibrary().subscribe(response => {
+            // 1. Map to UI structure FIRST
+            const allMusics = response.map((m: any) => ({
+                name: m.music.nameMusic,
+                artist: m.music.artist,
+                tone: m.personalTone,
+                idUserMusic: m.idUserMusic,
+                ...m
+            }));
+
+            // 2. Filter out items already in the block
+            const existingIds = this.musics.map(m => m.idUserMusic);
+            this.library = allMusics.filter(m => !existingIds.includes(m.idUserMusic));
+
+            this.filterLibrary('');
+        });
+    }
+
+    filterLibrary(term: string) {
+        if (!term) {
+            this.filteredLibrary = this.library;
+            return;
+        }
+        const lower = term.toLowerCase();
+        // Filter on the FLATTENED properties
+        this.filteredLibrary = this.library.filter(m =>
+            (m.name || '').toLowerCase().includes(lower) ||
+            (m.artist || '').toLowerCase().includes(lower)
+        );
+    }
+
+    addMusicToBlock(music: any) {
+        this.blockService.addMusicToBlock(this.idBlock, music.idUserMusic).subscribe({
+            next: (updatedBlock: any) => {
+                // The backend returns a SINGLE updated block object (confirmed by screenshot)
+                if (updatedBlock && updatedBlock.musics) {
+                    this.musics = updatedBlock.musics.map((m: any) => {
+                        // Robust Mapping Strategy (Same as loadBlockData)
+                        const musicDetails = m.music || (m.userMusic ? m.userMusic.music : null) || m;
+                        const userDetails = m.userMusic || m;
+
+                        return {
+                            name: musicDetails.nameMusic || musicDetails.musicName || '',
+                            artist: musicDetails.artist || musicDetails.artistName || musicDetails.singer || '',
+                            tone: userDetails.personalTone || userDetails.tom || userDetails.tone || '',
+                            idUserMusic: userDetails.idUserMusic || musicDetails.idUserMusic,
+                            ...m
+                        };
+                    });
+                }
+
+                this.closeAddModal();
+            },
+            error: (err) => console.error('Erro ao adicionar música', err)
+        });
+    }
+
+    // REMOVE MUSIC
+    removeMusic(music: any, event: MouseEvent) {
+        event.stopPropagation();
+        this.musicToRemove = music;
+        this.showRemoveModal = true;
+        this.openMenuIndex = null;
+    }
+
+    cancelRemove() {
+        this.showRemoveModal = false;
+        this.musicToRemove = null;
+    }
+
+    confirmRemove() {
+        if (!this.musicToRemove) return;
+
+        this.blockService.removeMusicFromBlock(this.idBlock, this.musicToRemove.idUserMusic).subscribe({
+            next: () => {
+                this.loadBlockData();
+                this.cancelRemove();
+            },
+            error: (err) => console.error('Erro ao remover', err)
+        });
+    }
+
+}
