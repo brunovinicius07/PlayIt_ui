@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,35 +10,29 @@ export class MusicService {
 
     constructor(private http: HttpClient) { }
 
-    private getHeaders(): HttpHeaders {
-        const token = localStorage.getItem('auth-token');
-        return new HttpHeaders({
-            'Authorization': token ? `Bearer ${token}` : '',
-            'Content-Type': 'application/json'
-        });
-    }
+
 
     addMusic(url: string): Observable<any> {
-        return this.http.post<any>(`${this.apiUrl}/cipher`, { url }, { headers: this.getHeaders() });
+        return this.http.post<any>(`${this.apiUrl}/cipher`, { url });
     }
 
     getLibrary(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/library`, { headers: this.getHeaders() });
+        return this.http.get<any[]>(`${this.apiUrl}/library`);
     }
 
     getMusicDetail(idUserMusic: number): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/library/${idUserMusic}`, { headers: this.getHeaders() });
+        return this.http.get<any>(`${this.apiUrl}/library/${idUserMusic}`);
     }
 
     updateTone(idUserMusic: number, newTone: string): Observable<any> {
-        return this.http.patch<any>(`${this.apiUrl}/library/${idUserMusic}/tone`, { newTone }, { headers: this.getHeaders() });
+        return this.http.patch<any>(`${this.apiUrl}/library/${idUserMusic}/tone`, { newTone });
     }
 
     getMusic(id: number): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+        return this.http.get<any>(`${this.apiUrl}/${id}`);
     }
 
     deleteMusic(idUserMusic: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/library/${idUserMusic}`, { headers: this.getHeaders() });
+        return this.http.delete<void>(`${this.apiUrl}/library/${idUserMusic}`);
     }
 }

@@ -892,7 +892,17 @@
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
   z-index: 6000;
-  animation: fadeIn 0.3s ease;
+  animation: fadeInOverlay 0.3s ease;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .time-picker-modal {

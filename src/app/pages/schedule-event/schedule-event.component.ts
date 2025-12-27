@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScheduleEventService } from '../../service/schedule-event.service';
@@ -10,9 +10,12 @@ import { ScheduleEventService } from '../../service/schedule-event.service';
   templateUrl: './schedule-event.component.html',
   styleUrls: ['./schedule-event.component.scss']
 })
-export class ScheduleEventComponent implements OnInit {
+export class ScheduleEventComponent implements OnInit, AfterViewInit {
 
-  readonly userId = 1;
+  @ViewChild('hourList') hourListRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('minuteList') minuteListRef!: ElementRef<HTMLDivElement>;
+
+
 
   today = new Date();
   currentMonth = this.today.getMonth();
@@ -125,7 +128,7 @@ export class ScheduleEventComponent implements OnInit {
 
   loadDaysWithEvents() {
     this.scheduleService
-      .getDaysWithEvents(this.userId, this.currentYear, this.currentMonth + 1)
+      .getDaysWithEvents(this.currentYear, this.currentMonth + 1)
       .subscribe({
         next: days => this.daysWithEvents = days.map(d => Number(d)),
         error: () => this.daysWithEvents = []
@@ -142,7 +145,7 @@ export class ScheduleEventComponent implements OnInit {
     const formatted = this.formatDateLocal(day);
 
     this.scheduleService
-      .getEventsByDay(this.userId, formatted)
+      .getEventsByDay(formatted)
       .subscribe({
         next: events => this.eventsOfDay = events,
         error: () => this.eventsOfDay = []
@@ -216,6 +219,7 @@ export class ScheduleEventComponent implements OnInit {
     // Sincroniza o scroll inicial
     setTimeout(() => {
       this.syncScrolls();
+      this.bindWheelEvents();
     }, 50);
   }
 
@@ -256,6 +260,7 @@ export class ScheduleEventComponent implements OnInit {
 
   closeTimePicker() {
     this.showTimePicker = false;
+    this.unbindWheelEvents();
   }
 
   onScroll(event: any, type: 'hour' | 'minute') {
@@ -297,6 +302,33 @@ export class ScheduleEventComponent implements OnInit {
     });
   }
 
+
+  ngAfterViewInit() {
+    // Only bind if the elements exist (might not exist if *ngIf is false initially)
+  }
+
+  // Called when time picker opens
+  private bindWheelEvents() {
+    setTimeout(() => {
+      if (this.hourListRef && this.hourListRef.nativeElement) {
+        this.hourListRef.nativeElement.addEventListener('wheel', this.onWheel.bind(this), { passive: false });
+      }
+      if (this.minuteListRef && this.minuteListRef.nativeElement) {
+        this.minuteListRef.nativeElement.addEventListener('wheel', this.onWheel.bind(this), { passive: false });
+      }
+    }, 0);
+  }
+
+  // Called when time picker closes
+  private unbindWheelEvents() {
+    if (this.hourListRef && this.hourListRef.nativeElement) {
+      this.hourListRef.nativeElement.removeEventListener('wheel', this.onWheel.bind(this));
+    }
+    if (this.minuteListRef && this.minuteListRef.nativeElement) {
+      this.minuteListRef.nativeElement.removeEventListener('wheel', this.onWheel.bind(this));
+    }
+  }
+
   // Permite arrastar com o mouse no desktop
   onMouseDown(event: MouseEvent) {
     this.isDragging = true;
@@ -334,7 +366,7 @@ export class ScheduleEventComponent implements OnInit {
     const day = this.formatDateLocal(this.selectedDate);
 
     const payload = {
-      userId: this.userId,
+
       day,
       opening: `${day}T${this.newEvent.opening}:00`,
       closure: `${day}T${this.newEvent.closure}:00`,

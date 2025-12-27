@@ -200,9 +200,8 @@
     <!-- Coluna de Horas -->
     <div class="picker-col">
       <span class="col-label">Hora</span>
-      <div class="scroll-list" (scroll)="onScroll($event, 'hour')" (wheel)="onWheel($event)"
-        (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)"
-        (mouseleave)="onMouseLeave($event)">
+      <div class="scroll-list" (scroll)="onScroll($event, 'hour')" #hourList (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)" (mouseleave)="onMouseLeave($event)">
         <div *ngFor="let h of loopedHours" class="time-item" [class.active]="tempHour === h">
           {{ h }}
         </div>
@@ -212,9 +211,8 @@
     <!-- Coluna de Minutos -->
     <div class="picker-col">
       <span class="col-label">Minuto</span>
-      <div class="scroll-list" (scroll)="onScroll($event, 'minute')" (wheel)="onWheel($event)"
-        (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)"
-        (mouseleave)="onMouseLeave($event)">
+      <div class="scroll-list" (scroll)="onScroll($event, 'minute')" #minuteList (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)" (mouseleave)="onMouseLeave($event)">
         <div *ngFor="let m of loopedMinutes" class="time-item" [class.active]="tempMinute === m">
           {{ m }}
         </div>

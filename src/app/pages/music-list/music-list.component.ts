@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MusicService } from '../../service/music.service';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-music-list',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     templateUrl: './music-list.component.html',
     styleUrls: ['./music-list.component.scss']
 })
@@ -15,6 +16,11 @@ export class MusicListComponent implements OnInit {
     myMusics: any[] = [];
     openMenuIndex: number | null = null;
     copiedId: number | null = null;
+
+    // Search & Pagination
+    searchTerm: string = '';
+    currentPage: number = 1;
+    itemsPerPage: number = 10;
 
     constructor(
         private musicService: MusicService,
@@ -36,7 +42,7 @@ export class MusicListComponent implements OnInit {
                 // Sort by idUserMusic desc
                 const sorted = response.sort((a: any, b: any) => b.idUserMusic - a.idUserMusic);
 
-                // No slice, show all
+                // No slice, show all BUT mapped
                 this.myMusics = sorted.map((m: any) => ({
                     name: m.music.nameMusic,
                     artist: m.music.artist,
@@ -49,6 +55,55 @@ export class MusicListComponent implements OnInit {
             }
         });
     }
+
+    // --- Search & Pagination Logic ---
+
+    get filteredMusics() {
+        if (!this.searchTerm) {
+            return this.myMusics;
+        }
+        const lowerTerm = this.searchTerm.toLowerCase();
+        return this.myMusics.filter(music =>
+            music.name.toLowerCase().includes(lowerTerm) ||
+            music.artist.toLowerCase().includes(lowerTerm)
+        );
+    }
+
+    get paginatedMusics() {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return this.filteredMusics.slice(startIndex, startIndex + this.itemsPerPage);
+    }
+
+    get totalPages() {
+        return Math.ceil(this.filteredMusics.length / this.itemsPerPage);
+    }
+
+    updateSearch() {
+        this.currentPage = 1; // Reset to first page on search
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.scrollToTop();
+        }
+    }
+
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.scrollToTop();
+        }
+    }
+
+    scrollToTop() {
+        const container = document.querySelector('.scroll-container');
+        if (container) {
+            container.scrollTop = 0;
+        }
+    }
+
+    // --- End Search & Pagination ---
 
     toggleMenu(index: number, event: MouseEvent) {
         event.stopPropagation();
@@ -92,12 +147,21 @@ export class MusicListComponent implements OnInit {
         this.musicService.deleteMusic(this.musicToDelete.idUserMusic).subscribe({
             next: () => {
                 this.myMusics = this.myMusics.filter(m => m.idUserMusic !== this.musicToDelete.idUserMusic);
+
+                // Adjust pagination if page becomes empty
+                if (this.paginatedMusics.length === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                }
+
                 this.cancelDelete();
             },
             error: (err) => {
                 console.error('Error deleting music', err);
-                // Fallback visual delete if backend fails (optional, but requested by user logic previously)
+                // Fallback visual delete
                 this.myMusics = this.myMusics.filter(m => m.idUserMusic !== this.musicToDelete.idUserMusic);
+                if (this.paginatedMusics.length === 0 && this.currentPage > 1) {
+                    this.currentPage--;
+                }
                 this.cancelDelete();
             }
         });

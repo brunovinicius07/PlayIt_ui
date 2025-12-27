@@ -131,11 +131,9 @@
         }
 
         .btn-all-musics {
-            background: transparent;
+            background: #8A2BE2;
             border: 1px solid #8A2BE2;
-            /* Borda Roxa */
-            color: #8A2BE2;
-            /* Texto Roxo */
+            color: #fff;
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
@@ -145,9 +143,8 @@
             transition: .2s;
 
             &:hover {
-                background: #8A2BE2;
-                color: #fff;
-                box-shadow: 0 4px 12px rgba(138, 43, 226, 0.25);
+                filter: brightness(1.1);
+                box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
                 transform: translateY(-1px);
             }
         }

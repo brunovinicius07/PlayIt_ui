@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class ScheduleEventService {
 
-  private readonly API = 'http://localhost:8082/v1/schedule/event';
+  private readonly API = 'http://localhost:8080/v1/music/event';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createEvent(payload: any): Observable<any> {
     return this.http.post(`${this.API}/post`, payload);
@@ -26,29 +26,26 @@ export class ScheduleEventService {
     );
   }
 
-  getEventsByDay(userId: number, day: string): Observable<any[]> {
+  getEventsByDay(day: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.API}/day`, {
       params: {
-        userId: userId.toString(),
         day
       }
     });
   }
 
-  getDaysWithEvents(userId: number, year: number, month: number): Observable<number[]> {
+  getDaysWithEvents(year: number, month: number): Observable<number[]> {
     return this.http.get<number[]>(`${this.API}/month`, {
       params: {
-        userId: userId.toString(),
         year: year.toString(),
         month: month.toString()
       }
     });
   }
 
-  getEventsByRange(userId: number, start: string, end: string): Observable<any[]> {
+  getEventsByRange(start: string, end: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.API}/range`, {
       params: {
-        userId: userId.toString(),
         start,
         end
       }

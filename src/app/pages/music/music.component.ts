@@ -153,13 +153,7 @@ export class MusicComponent implements OnInit {
     }
 
     generateSlug(text: string): string {
-        return text
-            .toLowerCase()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/[^\w\-]+/g, '')
-            .replace(/\-\-+/g, '-')
-            .trim();
+        return text.trim().toLowerCase().replace(/\s+/g, '-');
     }
 
     goToLibrary() {

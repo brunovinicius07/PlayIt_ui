@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,27 +12,19 @@ export class BlockMusicService {
 
   constructor(private http: HttpClient) { }
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('auth-token');
-    return new HttpHeaders({
-      'Authorization': token ? `Bearer ${token}` : '',
-      'Content-Type': 'application/json'
-    });
-  }
+
 
   /** GET all blocks by user */
   getAllByUser(idUser: number): Observable<any[]> {
     return this.http.get<any[]>(
-      `${this.apiUrl}/getAll/${idUser}`,
-      { headers: this.getHeaders() }
+      `${this.apiUrl}/getAll/${idUser}`
     );
   }
 
   /** GET one block by ID */
   getOne(idBlock: number): Observable<any> {
     return this.http.get<any>(
-      `${this.apiUrl}/getById/${idBlock}`,
-      { headers: this.getHeaders() }
+      `${this.apiUrl}/getById/${idBlock}`
     );
   }
 
@@ -40,8 +32,7 @@ export class BlockMusicService {
   create(data: any): Observable<any> {
     return this.http.post<any>(
       `${this.apiUrl}/post`,
-      data,
-      { headers: this.getHeaders() }
+      data
     );
   }
 
@@ -49,8 +40,7 @@ export class BlockMusicService {
   update(idBlock: number, data: any): Observable<any> {
     return this.http.put<any>(
       `${this.apiUrl}/put/${idBlock}`,
-      data,
-      { headers: this.getHeaders() }
+      data
     );
   }
 
@@ -59,7 +49,6 @@ export class BlockMusicService {
     return this.http.delete(
       `${this.apiUrl}/delete/${idBlock}`,
       {
-        headers: this.getHeaders(),
         responseType: 'text' as const
       }
     );
@@ -67,9 +56,7 @@ export class BlockMusicService {
 
   /** GET Repertoire by ID */
   getRepertoireById(id: number) {
-    return this.http.get(`${this.apiUrlRepertoire}/${id}`, {
-      headers: this.getHeaders()
-    });
+    return this.http.get(`${this.apiUrlRepertoire}/${id}`);
   }
 
   addMusicToBlock(idBlockMusic: number, idUserMusic: number): Observable<any> {
@@ -77,11 +64,11 @@ export class BlockMusicService {
       idBlockMusic: idBlockMusic,
       idUserMusic: idUserMusic
     };
-    return this.http.put(`${this.apiUrl}/link-music-to-block`, payload, { headers: this.getHeaders() });
+    return this.http.put(`${this.apiUrl}/link-music-to-block`, payload);
   }
 
   removeMusicFromBlock(idBlockMusic: number, idUserMusic: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/removeMusic/${idBlockMusic}/${idUserMusic}`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.apiUrl}/removeMusic/${idBlockMusic}/${idUserMusic}`);
   }
 }
 

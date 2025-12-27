@@ -337,7 +337,8 @@ nav a.active i {
 =============================== */
 .content {
   flex: 1;
-  padding: 50px 70px;
+  padding: 50px 70px 25px 70px;
+  /* Reduced bottom padding to align with sidebar */
   transition: .65s cubic-bezier(.4, 0, .2, 1);
 }
 
@@ -345,6 +346,7 @@ nav a.active i {
 @media (min-width: 939px) {
   .content {
     padding-top: 90px;
+    /* Retornado ao original */
   }
 }
 
@@ -592,8 +594,10 @@ body.dark-mode .menu-divider {
   .content {
     padding-left: 16px !important;
     padding-right: 16px !important;
-    padding-top: 70px !important;
-    /* Reduzido de 90px para 70px para subir o conteúdo */
+    padding-top: 90px !important;
+    /* Retornado para 90px para outras telas */
+    padding-bottom: 25px !important;
+    /* Retorna padding inferior */
   }
 }
 
