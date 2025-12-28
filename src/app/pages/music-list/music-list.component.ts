@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MusicService } from '../../service/music.service';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
     styleUrls: ['./music-list.component.scss']
 })
 export class MusicListComponent implements OnInit {
+
+    @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
     myMusics: any[] = [];
     openMenuIndex: number | null = null;
@@ -107,11 +109,53 @@ export class MusicListComponent implements OnInit {
 
     toggleMenu(index: number, event: MouseEvent) {
         event.stopPropagation();
-        if (this.openMenuIndex === index) {
-            this.openMenuIndex = null;
-        } else {
-            this.openMenuIndex = index;
-        }
+
+        const card = (event.currentTarget as HTMLElement).closest('.music-card') as HTMLElement;
+        const container = this.scrollContainer?.nativeElement as HTMLElement;
+
+        const isOpening = this.openMenuIndex !== index;
+        this.openMenuIndex = isOpening ? index : null;
+
+        if (!isOpening || !card || !container) return;
+
+        setTimeout(() => {
+            const menu = card.querySelector('.dropdown-menu') as HTMLElement;
+            if (!menu) return;
+
+            const containerRect = container.getBoundingClientRect();
+            const menuRect = menu.getBoundingClientRect();
+            const padding = 25;
+
+            // 1. Ajusta se escondido embaixo
+            if (menuRect.bottom > containerRect.bottom) {
+                const diff = menuRect.bottom - containerRect.bottom + padding;
+                container.scrollBy({ top: diff, behavior: 'smooth' });
+            }
+
+            // 2. Ajusta se escondido em cima
+            if (menuRect.top < containerRect.top) {
+                const diff = containerRect.top - menuRect.top + padding;
+                container.scrollBy({ top: -diff, behavior: 'smooth' });
+            }
+
+            // 3. Ajuste para mostrar card inteiro
+            const cardRect = card.getBoundingClientRect();
+
+            if (cardRect.bottom > containerRect.bottom) {
+                container.scrollBy({
+                    top: cardRect.bottom - containerRect.bottom + padding,
+                    behavior: 'smooth'
+                });
+            }
+
+            if (cardRect.top < containerRect.top) {
+                container.scrollBy({
+                    top: -(containerRect.top - cardRect.top + padding),
+                    behavior: 'smooth'
+                });
+            }
+
+        }, 50);
     }
 
     openMusic(music: any) {

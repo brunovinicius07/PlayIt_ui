@@ -31,7 +31,7 @@
     </div>
 
     <!-- LOGO -->
-    <div class="logo-area">
+    <div class="logo-area" routerLink="/dashboard" (click)="onMenuClick()">
       <ng-container *ngIf="!sidebarCollapsed; else iconMini">
         <img src="assets/img/logo 01.png" class="logo-full" />
       </ng-container>

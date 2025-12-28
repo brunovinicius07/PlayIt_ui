@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,8 @@ import { BlockMusicService } from '../../service/blockmusic.service';
   styleUrls: ['./blockmusic.component.scss']
 })
 export class BlockMusicComponent implements OnInit {
+
+  @ViewChild('nameBlockInput') nameBlockInput!: ElementRef;
 
   idRepertoire!: number;
 
@@ -53,6 +55,25 @@ export class BlockMusicComponent implements OnInit {
     });
 
     this.loadBlocks();
+
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        this.openMenuIndex = null;
+        this.closeDeleteModal();
+        this.closeModal();
+      }
+
+      if (e.key === 'Enter') {
+        if (this.modalOpen) {
+          e.preventDefault();
+          this.save();
+        }
+        if (this.deleteModalOpen) {
+          e.preventDefault();
+          this.confirmDelete();
+        }
+      }
+    });
   }
 
   // ==========================================
@@ -94,6 +115,10 @@ export class BlockMusicComponent implements OnInit {
       this.editingId = null;
       this.form.reset();
     }
+
+    setTimeout(() => {
+      this.nameBlockInput?.nativeElement?.focus();
+    }, 100);
   }
 
   closeModal() {

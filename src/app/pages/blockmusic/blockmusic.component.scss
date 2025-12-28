@@ -1,6 +1,7 @@
 /* ===== container geral ===== */
 .block-wrapper {
-  padding: 30px 30px 10px 30px;
+  padding: 0 30px 10px 30px;
+  margin-top: -40px;
   display: flex;
   flex-direction: column;
   /* agora empilha vertical */
@@ -22,7 +23,8 @@
   /* Novo Layout Flex com gap reduzido */
   margin: 0 auto 10px auto;
   display: flex !important;
-  justify-content: space-between;
+  justify-content: center;
+  /* Center correctly */
   align-items: center;
   padding: 0 5px;
   position: relative;
@@ -38,6 +40,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Center text */
   line-height: 1;
   text-align: center;
 }
@@ -64,52 +67,7 @@
   }
 }
 
-.btn-back-2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f3f3f3;
-  padding: 10px 22px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  transition: .25s;
 
-  i {
-    font-size: 18px;
-  }
-
-
-
-  &:hover {
-    background: #e5e5e5;
-    transform: translateY(-2px);
-  }
-
-  /* ESTILO MOBILE: Botão Redondo Minimalista */
-  @media (max-width: 480px) {
-    width: 38px;
-    height: 38px;
-    padding: 0 !important;
-    border-radius: 50% !important;
-    justify-content: center;
-    background: #f0f0f0;
-    /* Fundo leve */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-    span {
-      display: none !important;
-    }
-
-    i {
-      font-size: 20px;
-      color: #333;
-      margin: 0;
-    }
-  }
-}
 
 /* Spacer para desktop sumir no mobile se precisar */
 .spacer {
@@ -124,10 +82,12 @@
 .board {
   width: 100%;
   max-width: 1100px;
-  background: #ffffff;
+  background: transparent;
+  /* Changed from white */
   border-radius: 20px;
   padding: 25px;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.09);
+  box-shadow: none;
+  /* Changed from shadow */
   min-height: auto;
 
   @media (max-width: 480px) {
@@ -137,11 +97,26 @@
   }
 }
 
+/* ... (lines 139-267 skipped) ... */
+
+.card.open {
+  transform: translateY(-6px);
+  z-index: 9999 !important;
+  box-shadow: none;
+}
+
 /* topo do board */
 .board-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 /* título */
@@ -150,9 +125,10 @@
   font-weight: 800;
   margin: 0;
   white-space: nowrap;
+  color: #333;
 
   @media (max-width: 480px) {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   @media (max-width: 380px) {
@@ -167,7 +143,8 @@
 /* botão criar */
 .btn-add {
   padding: 10px 25px;
-  border-radius: 12px;
+  border-radius: 50px;
+  /* Pill shape matched */
   background: #7c00ff;
   color: white;
   border: none;
@@ -175,16 +152,22 @@
   font-weight: 600;
   transition: .3s;
   white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(124, 0, 255, 0.3);
+  /* Shadow added */
 
   @media (max-width: 480px) {
     padding: 8px 14px;
     font-size: 12px;
-    border-radius: 10px;
   }
 
   @media (max-width: 360px) {
     padding: 6px 10px;
     font-size: 11px;
+  }
+
+  &:hover {
+    background: #6b00db;
+    transform: translateY(-2px);
   }
 }
 
@@ -268,7 +251,7 @@
 .card.open {
   transform: translateY(-6px);
   z-index: 9999 !important;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
+  box-shadow: none;
 }
 
 /* lápis */
@@ -589,19 +572,23 @@
 }
 
 .btn-back {
+  background: #8A2BE2;
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #f1f1f1;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
+  justify-content: center;
   cursor: pointer;
-  font-weight: 600;
   transition: .2s;
+  font-size: 20px;
+  box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
 
   &:hover {
-    background: #e6e6e6;
+    background: #7223bd;
+    transform: translateX(-2px);
   }
 
   i {

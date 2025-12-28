@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 export class RepertoireComponent implements OnInit {
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('nameInput') nameInput!: ElementRef;
 
   form!: FormGroup;
   modalOpen = false;
@@ -38,7 +39,7 @@ export class RepertoireComponent implements OnInit {
     private fb: FormBuilder,
     private repertoireService: RepertoireService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -168,6 +169,10 @@ export class RepertoireComponent implements OnInit {
       this.editingId = null;
       this.form.reset();
     }
+
+    setTimeout(() => {
+      this.nameInput?.nativeElement?.focus();
+    }, 100);
   }
 
 

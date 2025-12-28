@@ -14,19 +14,11 @@
 
     <div class="scroll-container" #scrollContainer>
 
-      <div class="cards"
-          cdkDropList
-          (cdkDropListDropped)="drop($event)">
+      <div class="cards" cdkDropList (cdkDropListDropped)="drop($event)">
 
-        <div class="card"
-            *ngFor="let rep of repertorios; let i = index"
-            cdkDrag
-            [cdkDragDisabled]="openMenuIndex !== null"
-            cdkDragLockAxis="y"
-            cdkDragBoundary=".scroll-container"
-            (cdkDragMoved)="onDrag($event)"
-            (click)="openRepertoire(rep.idRepertoire)"
-            [class.open]="openMenuIndex === i">
+        <div class="card" *ngFor="let rep of repertorios; let i = index" cdkDrag
+          [cdkDragDisabled]="openMenuIndex !== null" cdkDragLockAxis="y" cdkDragBoundary=".scroll-container"
+          (cdkDragMoved)="onDrag($event)" (click)="openRepertoire(rep.idRepertoire)" [class.open]="openMenuIndex === i">
 
           <!-- ícone do lápis -->
           <div class="edit-icon" (click)="toggleMenu(i, $event)">
@@ -37,31 +29,24 @@
           <p>{{ rep.totalBlocks }} blocos</p>
 
           <!-- menu -->
-          <div class="dropdown-menu"
-              *ngIf="openMenuIndex === i"
-              (click)="$event.stopPropagation()">
+          <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
 
-            <button class="dropdown-item"
-                    (click)="openRepertoire(rep.idRepertoire, $event)">
+            <button class="dropdown-item" (click)="openRepertoire(rep.idRepertoire, $event)">
               <i class="ph ph-browser"></i> Abrir
             </button>
 
-            <button class="dropdown-item"
-                    (click)="openModal(true, rep, $event)">
+            <button class="dropdown-item" (click)="openModal(true, rep, $event)">
               <i class="ph ph-pencil"></i> Editar
             </button>
 
-            <button class="dropdown-item"
-                    [class.copied]="copiedId === rep.idRepertoire"
-                    (click)="copyLink(rep.idRepertoire, $event)">
-              <i class="ph"
-                [class.ph-check-circle]="copiedId === rep.idRepertoire"
+            <button class="dropdown-item" [class.copied]="copiedId === rep.idRepertoire"
+              (click)="copyLink(rep.idRepertoire, $event)">
+              <i class="ph" [class.ph-check-circle]="copiedId === rep.idRepertoire"
                 [class.ph-link]="copiedId !== rep.idRepertoire"></i>
               {{ copiedId === rep.idRepertoire ? 'Link copiado!' : 'Copiar link' }}
             </button>
 
-            <button class="dropdown-item delete"
-                    (click)="deleteRepertoire(rep, $event)">
+            <button class="dropdown-item delete" (click)="deleteRepertoire(rep, $event)">
               <i class="ph ph-trash"></i> Excluir
             </button>
 
@@ -77,9 +62,7 @@
 
 
   <!-- OVERLAY DO MENU (quando clicar fora, fecha o menu) -->
-  <div class="menu-overlay"
-       *ngIf="openMenuIndex !== null"
-       (click)="openMenuIndex = null">
+  <div class="menu-overlay" *ngIf="openMenuIndex !== null" (click)="openMenuIndex = null">
   </div>
 
 
@@ -114,12 +97,8 @@
     </h2>
 
     <form [formGroup]="form" class="modal-form">
-      <input
-        type="text"
-        formControlName="nameRepertoire"
-        placeholder="Nome do repertório"
-        class="modal-input"
-      />
+      <input #nameInput type="text" formControlName="nameRepertoire" placeholder="Nome do repertório"
+        class="modal-input" />
     </form>
 
     <div class="modal-actions">

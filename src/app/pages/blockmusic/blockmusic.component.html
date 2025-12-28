@@ -1,27 +1,22 @@
 <div class="block-wrapper">
 
   <div class="block-top-header">
-
-    <button class="btn-back-2" (click)="goBack()">
-      <i class="ph ph-caret-left"></i>
-      <span>Voltar</span>
-    </button>
-
-    <div class="title-wrapper">
+    <div class="title-wrapper" style="margin: 0 auto;">
       <span class="eyebrow">Repertório</span>
       <h1 class="rep-title">{{ repertoireName }}</h1>
     </div>
-
-    <!-- Espaçador vazio para equilibrar se quiser centralizado, ou apenas remover -->
-    <div style="width: 40px;" class="spacer"></div>
-
   </div>
 
   <div class="board">
 
     <!-- Header -->
     <div class="board-header">
-      <h1>Blocos</h1>
+      <div class="header-left">
+        <button class="btn-back" (click)="goBack()">
+          <i class="ph ph-arrow-left"></i>
+        </button>
+        <h1>Blocos</h1>
+      </div>
 
       <button class="btn-add" (click)="openModal(false)">
         + Criar Bloco
@@ -101,7 +96,8 @@
     </h2>
 
     <form [formGroup]="form" class="modal-form">
-      <input type="text" formControlName="nameBlockMusic" placeholder="Nome do bloco" class="modal-input" />
+      <input #nameBlockInput type="text" formControlName="nameBlockMusic" placeholder="Nome do bloco"
+        class="modal-input" />
     </form>
 
     <div class="modal-actions">

@@ -71,11 +71,52 @@ export class MusicComponent implements OnInit {
 
     toggleMenu(index: number, event: MouseEvent) {
         event.stopPropagation();
-        if (this.openMenuIndex === index) {
-            this.openMenuIndex = null;
-        } else {
-            this.openMenuIndex = index;
-        }
+
+        const card = (event.currentTarget as HTMLElement).closest('.music-card') as HTMLElement;
+        const isOpening = this.openMenuIndex !== index;
+        this.openMenuIndex = isOpening ? index : null;
+
+        if (!isOpening || !card) return;
+
+        setTimeout(() => {
+            const menu = card.querySelector('.dropdown-menu') as HTMLElement;
+            if (!menu) return;
+
+            const menuRect = menu.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const viewportTop = 0;
+            const padding = 25;
+
+            // 1. Ajusta se escondido embaixo (Global)
+            if (menuRect.bottom > viewportHeight) {
+                const diff = menuRect.bottom - viewportHeight + padding;
+                window.scrollBy({ top: diff, behavior: 'smooth' });
+            }
+
+            // 2. Ajusta se escondido em cima (Global - raro mas possível sob header)
+            if (menuRect.top < viewportTop) {
+                const diff = viewportTop - menuRect.top + padding;
+                window.scrollBy({ top: -diff, behavior: 'smooth' });
+            }
+
+            // 3. Ajuste para mostrar card inteiro
+            const cardRect = card.getBoundingClientRect();
+
+            if (cardRect.bottom > viewportHeight) {
+                window.scrollBy({
+                    top: cardRect.bottom - viewportHeight + padding,
+                    behavior: 'smooth'
+                });
+            }
+
+            if (cardRect.top < viewportTop + 70) { // +70 por causa do header fixo se houver
+                window.scrollBy({
+                    top: -(viewportTop + 70 - cardRect.top + padding),
+                    behavior: 'smooth'
+                });
+            }
+
+        }, 50);
     }
 
     openMusic(music: any) {

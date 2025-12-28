@@ -286,7 +286,12 @@
     }
 
     &.active-card {
-        z-index: 100;
+        z-index: 9999 !important;
+        transform: translateY(-6px);
+        box-shadow: none;
+        /* Shadow removed */
+        background: #34344e;
+        /* Mantém cor de hover/ativo */
     }
 
     .action-wrapper {
@@ -452,6 +457,18 @@
         opacity: 1;
     }
 }
+
+/* overlay do menu (FOCUS MODE) */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    z-index: 2000;
+    animation: fadeInOverlay .2s ease-out;
+}
+
+
 
 .modal-card {
     background: #fff;

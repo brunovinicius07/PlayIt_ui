@@ -4,7 +4,7 @@
             <button class="btn-back" (click)="goBack()">
                 <i class="ph ph-arrow-left"></i>
             </button>
-            <h2>Sua Lista de Músicas</h2>
+            <h2>Minha Lista de Músicas</h2>
         </div>
 
         <div class="search-bar">
@@ -15,7 +15,7 @@
     </div>
 
     <!-- WRAPPER PARA SCROLL -->
-    <div class="scroll-container">
+    <div class="scroll-container" #scrollContainer>
         <div class="list-container">
             <div *ngFor="let music of paginatedMusics; let i = index" class="music-card"
                 [class.active-card]="openMenuIndex === i" (click)="openMusic(music)">
@@ -69,6 +69,9 @@
         </div>
     </div>
 </div>
+
+<!-- OVERLAY BACKDROP -->
+<div class="menu-overlay" *ngIf="openMenuIndex !== null" (click)="openMenuIndex = null"></div>
 
 <!-- DELETE MODAL -->
 <div class="modal-overlay" *ngIf="showDeleteModal">

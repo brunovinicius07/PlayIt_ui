@@ -3,8 +3,13 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    padding: 5px 10px 20px 10px;
+    padding: 0 10px 0 10px;
+    /* Adjusted padding like Music List */
     margin-left: 0;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
 
     @media (min-width: 939px) {
         margin-left: 60px;
@@ -67,16 +72,19 @@
         background: #8A2BE2;
         color: #fff;
         border: none;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-size: 12px;
+        border-radius: 50px;
+        /* Pill shape matched */
+        padding: 10px 20px;
+        /* Adjusted padding */
+        font-size: 13px;
         font-weight: 600;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
         cursor: pointer;
         transition: .2s;
-        box-shadow: 0 4px 10px rgba(138, 43, 226, 0.2);
+        box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
+        /* Stronger shadow */
 
         &:hover {
             background: #7223bd;
@@ -84,7 +92,7 @@
         }
 
         i {
-            font-size: 14px;
+            font-size: 15px;
         }
     }
 }
@@ -95,6 +103,28 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
+    /* Match Music List */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 20px;
+    padding-right: 5px;
+    padding-top: 5px;
+    /* Added to prevent hover clipping */
+}
+
+/* Scrollbar Style from Music List */
+.list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+    background: #cfcfcf;
+    border-radius: 6px;
+}
+
+.list-container::-webkit-scrollbar-thumb:hover {
+    background: #b5b5b5;
 }
 
 .empty-state {
@@ -160,7 +190,11 @@
     }
 
     &.active-card {
-        z-index: 100;
+        z-index: 9999 !important;
+        transform: translateY(-6px);
+        box-shadow: none;
+        /* Shadow removed */
+        background: #34344e;
     }
 
     .action-wrapper {
@@ -474,5 +508,25 @@
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+/* overlay do menu (FOCUS MODE) */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    z-index: 2000;
+    animation: fadeInOverlay .2s ease-out;
+}
+
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }
