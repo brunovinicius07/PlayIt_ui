@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginResponse } from '../types/login-response.type';
-import { tap, Observable  } from 'rxjs';
+import { tap, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class LoginService {
       );
   }
 
-  signup(nameUser: string, email: string, password: string, confirmNewPassword: string){
+  signup(nameUser: string, email: string, password: string, confirmNewPassword: string) {
     return this.httpClient.post<LoginResponse>(
       this.apiUrl + "/register",
       { nameUser, email, password, confirmNewPassword }
@@ -35,9 +35,29 @@ export class LoginService {
         localStorage.setItem("idUser", String(value.idUser));
         localStorage.setItem("username", value.nameUser);
         localStorage.setItem("role", value.role);
-
-
       })
+    );
+  }
+
+  verifyCode(email: string, code: string) {
+    const params = new HttpParams()
+      .set('email', email)
+      .set('code', code);
+
+    return this.httpClient.post(
+      `${this.apiUrl}/verify`,
+      {},
+      { params, responseType: 'text' }
+    );
+  }
+
+  resendCode(email: string) {
+    const params = new HttpParams().set('email', email);
+
+    return this.httpClient.post(
+      `${this.apiUrl}/resend-code`,
+      {},
+      { params, responseType: 'text' }
     );
   }
 

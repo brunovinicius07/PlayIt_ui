@@ -17,42 +17,53 @@
     </div>
 
     <!-- CONTENT LIST -->
-    <div class="list-container">
-        <div class="empty-state" *ngIf="musics.length === 0">
-            <i class="ph ph-music-notes"></i>
-            <p>Nenhuma música neste bloco ainda.</p>
-        </div>
+    <!-- Wrapper do Drag Boundary com margem negativa (Top Trick) -->
+    <div class="drag-boundary">
+        <div class="list-container" cdkScrollable>
 
-        <div *ngFor="let music of musics; let i = index" class="music-card" [class.active-card]="openMenuIndex === i"
-            (click)="openMusic(music)">
+            <div cdkDropList [cdkDropListAutoScrollStep]="10" (cdkDropListDropped)="drop($event)"
+                class="drop-list-wrapper">
 
-            <div class="info">
-                <div class="music-name">{{ music.name }} <span class="music-tone" *ngIf="music.tone">- Tom: {{
-                        music.tone }}</span></div>
-                <div class="artist-name">- {{ music.artist }}</div>
-            </div>
-
-            <!-- ACTION MENU -->
-            <div class="action-wrapper">
-                <div class="edit-icon" (click)="toggleMenu(i, $event)">
-                    <i class="ph ph-pencil-simple-line"></i>
+                <div class="empty-state" *ngIf="musics.length === 0">
+                    <i class="ph ph-music-notes"></i>
+                    <p>Nenhuma música neste bloco ainda.</p>
                 </div>
 
-                <!-- DROPDOWN -->
-                <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
-                    <button class="dropdown-item" (click)="openMusic(music)">
-                        <i class="ph ph-browser"></i> Abrir
-                    </button>
+                <div *ngFor="let music of musics; trackBy: trackById; let i = index" class="music-card"
+                    [class.active-card]="openMenuIndex === i" (click)="openMusic(music)" cdkDrag cdkDragLockAxis="y"
+                    cdkDragBoundary=".drag-boundary">
 
-                    <button class="dropdown-item" [class.copied]="copiedId === i" (click)="copyLink(music, i, $event)">
-                        <i class="ph" [ngClass]="copiedId === i ? 'ph-check-circle' : 'ph-link'"></i>
-                        {{ copiedId === i ? 'Link copiado!' : 'Copiar Link' }}
-                    </button>
+                    <div class="info">
+                        <div class="music-name">{{ music.name }} <span class="music-tone" *ngIf="music.tone">- Tom: {{
+                                music.tone }}</span></div>
+                        <div class="artist-name">- {{ music.artist }}</div>
+                    </div>
 
-                    <button class="dropdown-item delete" (click)="removeMusic(music, $event)">
-                        <i class="ph ph-trash"></i> Remover
-                    </button>
+                    <!-- ACTION MENU -->
+                    <div class="action-wrapper">
+                        <div class="edit-icon" (click)="toggleMenu(i, $event)">
+                            <i class="ph ph-pencil-simple-line"></i>
+                        </div>
+
+                        <!-- DROPDOWN -->
+                        <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
+                            <button class="dropdown-item" (click)="openMusic(music)">
+                                <i class="ph ph-browser"></i> Abrir
+                            </button>
+
+                            <button class="dropdown-item" [class.copied]="copiedId === i"
+                                (click)="copyLink(music, i, $event)">
+                                <i class="ph" [ngClass]="copiedId === i ? 'ph-check-circle' : 'ph-link'"></i>
+                                {{ copiedId === i ? 'Link copiado!' : 'Copiar Link' }}
+                            </button>
+
+                            <button class="dropdown-item delete" (click)="removeMusic(music, $event)">
+                                <i class="ph ph-trash"></i> Remover
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

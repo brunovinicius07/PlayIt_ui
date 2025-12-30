@@ -6,6 +6,10 @@
   flex-direction: column;
   /* agora empilha vertical */
   align-items: center;
+  /* Garante altura total para o flex funcionar */
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 
   @media (max-width: 938px) {
     padding: 0 5px 5px 5px;
@@ -88,7 +92,14 @@
   padding: 25px;
   box-shadow: none;
   /* Changed from shadow */
-  min-height: auto;
+
+  /* Flex Layout para preencher a tela */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  /* Ocupa o resto da altura do wrapper */
+  min-height: 0;
+  /* Importante para scroll interno funcionar dentro do flex */
 
   @media (max-width: 480px) {
     padding: 10px 10px;
@@ -172,18 +183,39 @@
 }
 
 /* ===== área scrollável ===== */
+/* ===== Fronteira de Drag (Wrapper) ===== */
+.drag-boundary {
+  /* margin-top original era 5px. 
+     Queremos subir 25px de área útil. 
+     5 - 25 = -20px margin. 
+     padding compensa os 25px. */
+  margin-top: -20px;
+  padding-top: 25px;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ===== área scrollável ===== */
 .scroll-container {
-  margin-top: 5px;
-  /* Lista quase colada no topo */
-  max-height: 520px;
+  /* margin-top movido para o boundary */
+  /* Flex 1 faz ele ocupar todo espaço restante do board e remove limite fixo */
+  flex: 1;
+  height: auto;
+  max-height: none;
+
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  padding: 6px 8px 8px 0;
+  padding-right: 8px;
+  /* Mantém espaço apenas pra scrollbar */
 
   @media (max-width: 600px) {
-    /* Altura ajustada: sobe mais a borda inferior */
-    max-height: calc(100vh - 185px);
+    /* Não precisa mais de max-height calculado manual */
+    max-height: none;
   }
 }
 
@@ -193,7 +225,7 @@
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
-  background: #cfcfcf;
+  background: #2D2D44;
   border-radius: 6px;
 }
 
@@ -206,45 +238,55 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+
+  /* Garante área de drop total */
+  min-height: 100%;
+  padding: 6px 0 40px 0;
+  /* Padding movido para cá */
+  box-sizing: border-box;
 }
 
 /* ===== CARD ===== */
 .card {
   width: 100%;
   height: 160px;
+  /* Standardized height */
   border-radius: 18px;
-  background: linear-gradient(145deg, #223b78, #0e1730);
+  /* Standardized radius */
+  background: #2D2D44;
+  backdrop-filter: none;
+  border: none;
   padding: 20px;
+  /* Standardized padding */
   cursor: pointer;
   position: relative;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
-  transition: transform .2s, box-shadow .2s, z-index .01s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: .3s;
   z-index: 1;
 
   @media (max-width: 480px) {
     height: 120px;
-    /* Altura reduzida mobile */
+    /* Standardized mobile height */
     padding: 15px;
-
-    h3 {
-      font-size: 18px;
-    }
   }
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
+    background: #34344e;
   }
 
   h3 {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 6px 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 4px 0;
   }
 
+
   p {
-    color: #c8c8c8;
-    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin-top: 0;
   }
 }
 

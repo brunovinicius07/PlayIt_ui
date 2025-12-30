@@ -1,16 +1,14 @@
-<div class="input-wrapper">
-  <label for="inputName">{{ label }}</label>
-  <div class="input-content">
-      <input
-          [type]="type"
-          [placeholder]="placeholder"
-          [value]="value"
-          (input)="onInput($event)"
-      />
-      <div class="icon">
-          <ng-content></ng-content>
-      </div>
-  </div>
+<div class="input-wrapper" [class.validatable]="enableValidation">
+    <label for="inputName">{{ label }}</label>
+    <div class="input-content">
+        <div class="input-body">
+            <input [type]="inputType" [placeholder]="placeholder" [value]="value" (input)="onInput($event)" />
+            <button type="button" class="eye-btn" *ngIf="type === 'password'" (click)="togglePasswordVisibility()">
+                <i class="ph" [class.ph-eye]="!passwordVisible" [class.ph-eye-slash]="passwordVisible"></i>
+            </button>
+        </div>
+        <div class="icon">
+            <ng-content></ng-content>
+        </div>
+    </div>
 </div>
-
-

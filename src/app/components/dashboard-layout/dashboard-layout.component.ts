@@ -108,6 +108,16 @@ export class DashboardLayoutComponent {
     }
   }
   isMusicActive(): boolean {
-    return this.router.url.startsWith('/music') || this.router.url.startsWith('/library');
+    const isStandardMusic = this.router.url.startsWith('/music') || this.router.url.startsWith('/library');
+    // Se estiver tocando uma música vinda de um bloco, a aba ativa deve ser "Repertórios"
+    const isFromBlock = this.router.url.includes('from=block');
+    return isStandardMusic && !isFromBlock;
+  }
+
+  isRepertoireActive(): boolean {
+    // Ativo se a rota for /repertoire OU se for uma música aberta pelo bloco
+    const isStandardRepertoire = this.router.isActive('/repertoire', { paths: 'subset', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' });
+    const isFromBlock = this.router.url.includes('from=block');
+    return isStandardRepertoire || isFromBlock;
   }
 }

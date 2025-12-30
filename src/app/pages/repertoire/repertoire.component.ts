@@ -78,19 +78,15 @@ export class RepertoireComponent implements OnInit {
     });
   }
 
-  onDrag(event: any) {
-    const container = document.querySelector('.scroll-container') as HTMLElement;
-    if (this.openMenuIndex !== null) return;
-    if (!container) return;
+  // Scroll Internals (Removed in favor of CDK Native)
 
-    const pointerY = event.pointerPosition?.y;
-    const box = container.getBoundingClientRect();
 
-    const top = box.top + 80;
-    const bottom = box.bottom - 80;
+  // ... (ngOnInit remains)
 
-    if (pointerY < top) container.scrollTop -= 25;
-    else if (pointerY > bottom) container.scrollTop += 25;
+
+
+  trackById(index: number, item: any): number {
+    return item.idRepertoire;
   }
 
 
@@ -244,6 +240,12 @@ export class RepertoireComponent implements OnInit {
 
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.repertorios, event.previousIndex, event.currentIndex);
+
+    const orderedIds = this.repertorios.map(r => r.idRepertoire);
+    this.repertoireService.reorder(orderedIds).subscribe({
+      next: () => console.log('Ordem salva com sucesso'),
+      error: (err) => console.error('Erro ao salvar ordem', err)
+    });
   }
 
   loadRepertoires() {
@@ -259,7 +261,13 @@ export class RepertoireComponent implements OnInit {
         }));
 
       },
-      error: (err) => console.error("Erro ao carregar repertórios", err)
+      error: (err) => {
+        if (err.status === 404) {
+          this.repertorios = [];
+          return;
+        }
+        console.error("Erro ao carregar repertórios", err);
+      }
     });
   }
 

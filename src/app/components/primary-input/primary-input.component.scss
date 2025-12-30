@@ -24,12 +24,45 @@
             }
         }
 
-        input {
-            border: none;
-            border-radius: 8px 0 0 8px;
+        .input-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
             background-color: $gray-secondary-bg;
-            padding: 12px 0 12px 20px;
-            width: 100%;
+            border-radius: 8px 0 0 8px;
+
+            input {
+                border: none;
+                background: transparent;
+                padding: 12px 0 12px 20px;
+                width: 100%;
+                color: $text-color;
+                outline: none;
+            }
+
+            .eye-btn {
+                background: transparent;
+                border: none;
+                padding: 0 15px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $text-color;
+
+                i {
+                    font-size: 1.2rem;
+                }
+            }
         }
     }
+}
+
+/* Validation Feedback applied to the inner input-body ONLY if enabled */
+:host.ng-touched.ng-invalid .validatable .input-body {
+    border: 1px solid #ff4444 !important;
+}
+
+:host.ng-dirty.ng-valid .validatable .input-body:not(:has(input:placeholder-shown)) {
+    border: 1px solid #00c851 !important;
 }

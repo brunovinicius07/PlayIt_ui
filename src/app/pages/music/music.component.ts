@@ -21,6 +21,7 @@ export class MusicComponent implements OnInit {
     // State for menu
     openMenuIndex: number | null = null;
     copiedId: number | null = null;
+    errorMessage: string | null = null;
 
     constructor(
         private fb: FormBuilder,
@@ -173,9 +174,19 @@ export class MusicComponent implements OnInit {
                 }
 
                 this.form.reset();
+                this.errorMessage = null; // Clean error on success
             },
             error: (err) => {
                 console.error('Error adding music', err);
+                if (err.error && err.error.message) {
+                    // Highlight terms
+                    let msg = err.error.message;
+                    msg = msg.replace('Nome da Música', '<strong>Nome da Música</strong>');
+                    msg = msg.replace('Nome do Artista', '<strong>Nome do Artista</strong>');
+                    this.errorMessage = msg;
+                } else {
+                    this.errorMessage = 'Erro ao buscar música. Verifique o nome e artista.';
+                }
             }
         });
     }
@@ -199,5 +210,9 @@ export class MusicComponent implements OnInit {
 
     goToLibrary() {
         this.router.navigate(['/library']);
+    }
+
+    closeErrorModal() {
+        this.errorMessage = null;
     }
 }

@@ -32,9 +32,8 @@
 
     .btn-back {
         background: #8A2BE2;
-        /* Purple solid */
-        border: none;
         color: #fff;
+        border: none;
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -43,6 +42,8 @@
         justify-content: center;
         cursor: pointer;
         transition: .2s;
+        font-size: 20px;
+        flex-shrink: 0;
         box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
 
         &:hover {
@@ -54,6 +55,8 @@
             font-size: 20px;
         }
     }
+
+    /* .nav-controls was here, but moved to be sibling of header or inside .controls */
 
     .title-info {
         h1 {
@@ -79,7 +82,58 @@
 .controls {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    /* This pushes items to edges */
+    width: 100%;
+    /* Mandatory for space-between to work */
     padding-left: 5px;
+    margin-bottom: 10px;
+    gap: 15px;
+
+    /* Nav Controls Styles (Now correctly nested in .controls) */
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: transparent;
+        padding: 0;
+        border: none;
+
+        .nav-btn {
+            background: #8A2BE2;
+            /* Solid Purple */
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+
+            &:hover:not(:disabled) {
+                background: #7223bd;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(138, 43, 226, 0.4);
+            }
+
+            &:active:not(:disabled) {
+                transform: translateY(0);
+            }
+
+            &:disabled {
+                background: #e0e0e0;
+                color: #9e9e9e;
+                box-shadow: none;
+                cursor: not-allowed;
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .tone-selector {

@@ -62,13 +62,28 @@
       <div class="password-fields" *ngIf="showPasswordFields">
 
         <label>Senha atual</label>
-        <input type="password" formControlName="currentPassword" />
+        <div class="password-wrapper">
+          <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="currentPassword" />
+          <button type="button" class="eye-btn" (click)="toggleCurrentPassword()">
+            <i class="ph" [class.ph-eye-slash]="!showCurrentPassword" [class.ph-eye]="showCurrentPassword"></i>
+          </button>
+        </div>
 
         <label>Nova senha</label>
-        <input type="password" formControlName="newPassword" />
+        <div class="password-wrapper validatable">
+          <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword" />
+          <button type="button" class="eye-btn" (click)="toggleNewPassword()">
+            <i class="ph" [class.ph-eye-slash]="!showNewPassword" [class.ph-eye]="showNewPassword"></i>
+          </button>
+        </div>
 
         <label>Confirmar nova senha</label>
-        <input type="password" formControlName="confirmNewPassword" />
+        <div class="password-wrapper validatable">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmNewPassword" />
+          <button type="button" class="eye-btn" (click)="toggleConfirmPassword()">
+            <i class="ph" [class.ph-eye-slash]="!showConfirmPassword" [class.ph-eye]="showConfirmPassword"></i>
+          </button>
+        </div>
 
       </div>
 

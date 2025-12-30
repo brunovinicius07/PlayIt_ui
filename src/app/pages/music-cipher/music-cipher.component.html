@@ -38,12 +38,22 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Navigation Controls (Pushed to Right via CSS) -->
+            <div class="nav-controls" *ngIf="playlist.length > 0">
+                <button class="nav-btn" [disabled]="!hasPrevious" (click)="goToPrevious()">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <button class="nav-btn" [disabled]="!hasNext" (click)="goToNext()">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- CONTENT (SCROLLABLE CARD) -->
     <div class="cipher-card">
-        <div class="scroll-area">
+        <div class="scroll-area" #scrollContainer>
             <pre [innerHTML]="music.cipher"></pre>
         </div>
     </div>

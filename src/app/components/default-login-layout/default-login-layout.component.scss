@@ -1,94 +1,94 @@
 @import "../../../styles/variables.scss";
 
 main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  section {
+    height: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
+  }
 
-    section {
-        height: 100%;
+  .main-section {
+    gap: 8px;
+    flex-grow: 1;
+    background-color: $gray-bg;
+  }
+
+  .form-section {
+    flex-grow: 0.3;
+    padding: 0 35px;
+
+    img {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 45px;
+    }
+
+    .btn-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 30px;
+
+      .divider {
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-    }
+        gap: 20px;
+        width: 100%;
 
-    .main-section {
-        gap: 8px;
-        flex-grow: 1;
-        background-color: $gray-bg;
-    }
+        font-size: 14px;
+        color: $gray-bg;
+        font-weight: 400;
+        text-transform: uppercase;
 
-    .form-section {
-        flex-grow: 0.3;
-        padding: 0 35px;
+        div {
+          flex-grow: 1;
+          height: 2px;
+          background-color: $gray-bg;
+        }
+      }
 
-        img {
-            margin-bottom: 30px;
+      button {
+        width: 100%;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        border: none;
+        background: transparent;
+        padding: 12px 24px;
+        cursor: pointer;
+
+        &:disabled {
+          opacity: 0.8;
         }
 
-        h2 {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 45px;
+        &.btn-primary {
+          background-color: $primary-color;
+          color: white;
+          box-shadow: 0px 8px 12px rgba(148, 64, 255, 0.2);
         }
 
-        .btn-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            gap: 30px;
-
-            .divider {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 20px;
-                width: 100%;
-
-                font-size: 14px;
-                color: $gray-bg;
-                font-weight: 400;
-                text-transform: uppercase;
-
-                div {
-                    flex-grow: 1;
-                    height: 2px;
-                    background-color: $gray-bg;
-                }
-            }
-
-            button {
-                width: 100%;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: 500;
-                border: none;
-                background: transparent;
-                padding: 12px 24px;
-                cursor: pointer;
-
-                &:disabled {
-                    opacity: 0.8;
-                }
-
-                &.btn-primary {
-                    background-color: $primary-color;
-                    color: white;
-                    box-shadow: 0px 8px 12px rgba(148,64,255,0.2);
-                }
-
-                &.btn-secondary {
-                    border: 1px solid $primary-color;
-                    color: $primary-color;
-                }
-            }
+        &.btn-secondary {
+          border: 1px solid $primary-color;
+          color: $primary-color;
         }
+      }
     }
+  }
 }
 
 .success-toast {
@@ -120,6 +120,7 @@ main {
     opacity: 0;
     transform: translateX(-50%) translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -133,122 +134,132 @@ main {
 
 @media (max-width: 870px) {
 
-    main {
-        flex-direction: column;
-        height: auto;
-        padding-top: 40px;
-    }
+  main {
+    flex-direction: column;
+    height: auto;
+    padding-top: 40px;
+  }
 
-    .form-section {
-        width: 100%;
-        max-width: 400px;
-        padding: 0 20px;
-        justify-content: flex-start;
-    }
+  .form-section {
+    width: 100%;
+    max-width: 400px;
+    padding: 0 20px;
+    justify-content: flex-start;
+  }
 
-    .main-section {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+  .main-section {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) {
-        padding-top: 0 !important;
-        margin-top: -25px !important;
-        padding-bottom: 0 !important;
-    }
+  .form-section:has(app-primary-input:nth-child(4)) {
+    padding-top: 0 !important;
+    margin-top: -25px !important;
+    padding-bottom: 0 !important;
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) img {
-        margin-bottom: 10px !important;
+  .form-section:has(app-primary-input:nth-child(4)) img {
+    margin-bottom: 10px !important;
     width: auto !important;
     max-width: 130px !important;
-    }
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) h2 {
-        margin-bottom: 20px !important;
-        font-size: 18px !important;
-    }
+  .form-section:has(app-primary-input:nth-child(4)) h2 {
+    margin-bottom: 20px !important;
+    font-size: 18px !important;
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) app-primary-input {
-        margin-bottom: 10px !important;
-    }
+  .form-section:has(app-primary-input:nth-child(4)) app-primary-input {
+    margin-bottom: 10px !important;
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) .btn-wrapper {
-        margin-top: 10px !important;
-        gap: 18px !important;
-    }
+  .form-section:has(app-primary-input:nth-child(4)) .btn-wrapper {
+    margin-top: 10px !important;
+    gap: 18px !important;
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) .divider {
-        margin-top: -5px !important;
-    }
+  .form-section:has(app-primary-input:nth-child(4)) .divider {
+    margin-top: -5px !important;
+  }
 
-    .form-section:has(app-primary-input:nth-child(4)) .btn-secondary {
-        margin-top: -5px !important;
-    }
+  .form-section:has(app-primary-input:nth-child(4)) .btn-secondary {
+    margin-top: -5px !important;
+  }
 
-        /* ===============================================================
+  /* ===============================================================
       📱 Ajuste fino — iPhone 5/SE (320px)
       (entre o que estava antes e o último ajuste)
     ================================================================ */
-    @media (max-width: 360px) {
+  @media (max-width: 360px) {
 
-      main {
-        padding-top: 22px !important;   /* antes era 10px — agora mais equilibrado */
-      }
-
-      .form-section {
-        padding: 0 18px !important;
-        margin-top: -5px !important;    /* antes era -15px — agora apenas -5px */
-      }
-
-      /* Logo */
-      .form-section img {
-        margin-bottom: 12px !important; /* estava 8px — agora mais natural */
-        max-width: 120px !important;
-      }
-
-      /* Título */
-      .form-section h2 {
-        font-size: 18px !important;
-        margin-bottom: 20px !important; /* estava 16px */
-      }
-
-      /* Inputs */
-      app-primary-input {
-        margin-bottom: 8px !important;  /* estava 6px */
-      }
-
-      form {
-        gap: 18px !important;           /* antes 14px — agora mais espaçado */
-        margin-bottom: 16px !important; /* antes 10px — agora mais confortável */
-      }
-
-      form span {
-        font-size: 13px !important;
-        margin-top: -2px !important;
-      }
-
-      .btn-wrapper {
-        gap: 20px !important;           /* estava 14px — agora mais alinhado */
-        margin-top: 4px !important;     /* antes 0 */
-      }
-
-      .btn-wrapper button {
-        padding: 12px !important;       /* antes 10px — agora padrão visual */
-        font-size: 15px !important;
-      }
-
-      .divider {
-        margin-top: 0 !important;
-        margin-bottom: 2px !important;
-      }
-
-      .btn-secondary {
-        margin-top: 0 !important;
-      }
+    main {
+      padding-top: 22px !important;
+      /* antes era 10px — agora mais equilibrado */
     }
+
+    .form-section {
+      padding: 0 18px !important;
+      margin-top: -5px !important;
+      /* antes era -15px — agora apenas -5px */
+    }
+
+    /* Logo */
+    .form-section img {
+      margin-bottom: 12px !important;
+      /* estava 8px — agora mais natural */
+      max-width: 120px !important;
+    }
+
+    /* Título */
+    .form-section h2 {
+      font-size: 18px !important;
+      margin-bottom: 20px !important;
+      /* estava 16px */
+    }
+
+    /* Inputs */
+    app-primary-input {
+      margin-bottom: 8px !important;
+      /* estava 6px */
+    }
+
+    form {
+      gap: 18px !important;
+      /* antes 14px — agora mais espaçado */
+      margin-bottom: 16px !important;
+      /* antes 10px — agora mais confortável */
+    }
+
+    form span {
+      font-size: 13px !important;
+      margin-top: -2px !important;
+    }
+
+    .btn-wrapper {
+      gap: 20px !important;
+      /* estava 14px — agora mais alinhado */
+      margin-top: 4px !important;
+      /* antes 0 */
+    }
+
+    .btn-wrapper button {
+      padding: 12px !important;
+      /* antes 10px — agora padrão visual */
+      font-size: 15px !important;
+    }
+
+    .divider {
+      margin-top: 0 !important;
+      margin-bottom: 2px !important;
+    }
+
+    .btn-secondary {
+      margin-top: 0 !important;
+    }
+  }
 
 }

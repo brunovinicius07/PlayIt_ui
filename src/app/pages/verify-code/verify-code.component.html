@@ -1,0 +1,37 @@
+<div class="main-container">
+
+    <div class="card-verify">
+        <div class="icon-area">
+            <i class="ph ph-shield-check"></i>
+        </div>
+
+        <h1>Verificação de Segurança</h1>
+        <p class="desc">
+            Enviamos um código de 6 dígitos para <br>
+            <strong>{{ email }}</strong>
+        </p>
+
+        <div class="input-area">
+            <input type="text" maxlength="6" [(ngModel)]="otpCode" placeholder="000000"
+                (keypress)="onlyNumbers($event)">
+        </div>
+
+        <div class="timer-area">
+            <span>{{ displayTime }}</span>
+        </div>
+
+        <button class="btn-verify" (click)="verify()" [disabled]="otpCode.length < 6 || isLoading">
+            <span *ngIf="!isLoading">Verificar Código</span>
+            <span *ngIf="isLoading" class="loader"></span>
+        </button>
+
+        <div class="resend-area">
+            <p>Não recebeu o código?</p>
+            <button class="btn-resend" (click)="resend()" [disabled]="timeLeft > 0">
+                Reenviar Código
+            </button>
+        </div>
+
+    </div>
+
+</div>

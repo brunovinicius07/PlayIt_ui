@@ -50,7 +50,7 @@
         <span *ngIf="!sidebarCollapsed">Painel</span>
       </a>
 
-      <a routerLink="/repertoire" routerLinkActive="active" (click)="onMenuClick()">
+      <a routerLink="/repertoire" [class.active]="isRepertoireActive()" (click)="onMenuClick()">
         <i class="ph ph-music-notes"></i>
         <span *ngIf="!sidebarCollapsed">Repertórios</span>
       </a>

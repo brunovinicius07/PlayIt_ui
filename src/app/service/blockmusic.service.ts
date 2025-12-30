@@ -68,7 +68,15 @@ export class BlockMusicService {
   }
 
   removeMusicFromBlock(idBlockMusic: number, idUserMusic: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/removeMusic/${idBlockMusic}/${idUserMusic}`);
+    return this.http.delete(`${this.apiUrl}/${idBlockMusic}/remove-music/${idUserMusic}`);
+  }
+
+  reorderBlocks(idBlockMusics: number[]): Observable<any> {
+    return this.http.put(`${this.apiUrl}/reorder-blocks`, idBlockMusics);
+  }
+
+  reorderBlockItems(idBlockMusic: number, orderedIds: number[]): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${idBlockMusic}/reorder-items`, orderedIds);
   }
 }
 

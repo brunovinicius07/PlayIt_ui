@@ -15,6 +15,7 @@ import { BlockMusicService } from '../../service/blockmusic.service';
 export class BlockMusicComponent implements OnInit {
 
   @ViewChild('nameBlockInput') nameBlockInput!: ElementRef;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   idRepertoire!: number;
 
@@ -35,6 +36,8 @@ export class BlockMusicComponent implements OnInit {
   blockToDelete: any = null;
 
   repertoireName: string = '';
+
+  // Scroll Internals (Removed in favor of CDK Native)
 
 
   constructor(
@@ -75,6 +78,8 @@ export class BlockMusicComponent implements OnInit {
       }
     });
   }
+
+
 
   // ==========================================
   // 🔙 Voltar
@@ -167,23 +172,24 @@ export class BlockMusicComponent implements OnInit {
     const isOpening = this.openMenuIndex !== i;
     this.openMenuIndex = isOpening ? i : null;
 
-    document.body.classList.toggle("menu-open", this.openMenuIndex !== null);
-
     // Só faz cálculo quando estiver abrindo
     if (!isOpening) return;
 
     setTimeout(() => {
-      const container = document.querySelector('.scroll-container') as HTMLElement;
-      const cards = document.querySelectorAll('.card');
-      const card = cards[i] as HTMLElement;
-      const menu = card.querySelector('.dropdown-menu') as HTMLElement;
+      const container = this.scrollContainer.nativeElement as HTMLElement;
 
-      if (!container || !card || !menu) return;
+      const cards = container.querySelectorAll('.card');
+      const card = cards[i] as HTMLElement;
+
+      if (!container || !card) return;
+
+      const menu = card.querySelector('.dropdown-menu') as HTMLElement;
+      if (!menu) return;
 
       const containerRect = container.getBoundingClientRect();
       const cardRect = card.getBoundingClientRect();
       const menuRect = menu.getBoundingClientRect();
-      const padding = 40; // aumentei aqui para subir mais
+      const padding = 25;
 
       // ========================================================
       // 🔥 1 — SE O MENU FICAR FORA DA PARTE INFERIOR DA TELA
@@ -224,7 +230,7 @@ export class BlockMusicComponent implements OnInit {
         });
       }
 
-    }, 10);
+    }, 5);
   }
 
 
@@ -281,23 +287,23 @@ export class BlockMusicComponent implements OnInit {
   // ==========================================
   // 🔀 Drag & Drop
   // ==========================================
+  // ==========================================
+  // 🔀 Drag & Drop
+  // ==========================================
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.blocks, event.previousIndex, event.currentIndex);
+
+    const orderedIds = this.blocks.map(b => b.idBlockMusic);
+    this.blockService.reorderBlocks(orderedIds).subscribe({
+      next: () => console.log('Blocos reordenados com sucesso'),
+      error: (err) => console.error('Erro ao reordenar blocos', err)
+    });
   }
 
-  onDrag(event: any) {
-    const container = document.querySelector('.scroll-container') as HTMLElement;
-    if (this.openMenuIndex !== null) return;
-    if (!container) return;
-
-    const pointerY = event.pointerPosition?.y;
-    const box = container.getBoundingClientRect();
-
-    const top = box.top + 80;
-    const bottom = box.bottom - 80;
-
-    if (pointerY < top) container.scrollTop -= 25;
-    else if (pointerY > bottom) container.scrollTop += 25;
+  trackById(index: number, item: any): number {
+    return item.idBlockMusic;
   }
+
+
 
 }

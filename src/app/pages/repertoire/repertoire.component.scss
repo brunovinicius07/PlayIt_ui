@@ -89,6 +89,23 @@
   }
 }
 
+/* ===== Fronteira de Drag (Wrapper) ===== */
+/* ===== Fronteira de Drag (Wrapper) ===== */
+.drag-boundary {
+  flex: 1;
+  /* Ocupa o resto do espaço abaixo do header */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Impede o card de sair desta área */
+  position: relative;
+  /* Contexto de posicionamento */
+
+  /* Truque para aumentar a área de drag pra cima */
+  margin-top: -25px;
+  padding-top: 25px;
+}
+
 /* ===== área scrollável ===== */
 .scroll-container {
   margin-top: 0;
@@ -97,8 +114,8 @@
   overflow-y: auto;
   /* overflow-x: hidden; */
   padding-right: 10px;
-  padding-bottom: 20px;
-  padding-top: 5px;
+  /* Padding vertical movido para .cards para o DropList ocupar tudo */
+
   /* Hover safety */
 
   /* Scrollbar personalizada */
@@ -112,7 +129,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background: #2D2D44;
     border-radius: 3px;
     transition: .2s;
 
@@ -128,6 +145,13 @@
   flex-direction: column;
   gap: 10px;
   /* Gap igual */
+
+  /* Garante área de drop total */
+  min-height: 100%;
+  padding-bottom: 40px;
+  /* Mais espaço no fim */
+  padding-top: 5px;
+  box-sizing: border-box;
 }
 
 /* ===== CARD ===== */

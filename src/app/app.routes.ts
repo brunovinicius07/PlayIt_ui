@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { VerifyCodeComponent } from './pages/verify-code/verify-code.component';
 
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
@@ -30,6 +31,7 @@ export const routes: Routes = [
 
   { path: "login", component: LoginComponent },
   { path: "signup", component: SignupComponent },
+  { path: "verify-code", component: VerifyCodeComponent },
   { path: "forgot-password", component: ForgotPasswordComponent },
   { path: "reset-password", component: ResetPasswordComponent },
 

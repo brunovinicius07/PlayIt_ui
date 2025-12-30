@@ -24,53 +24,55 @@
     </div>
 
     <!-- Scroll -->
-    <div class="scroll-container">
+    <div class="drag-boundary">
+      <div class="scroll-container" #scrollContainer cdkScrollable>
 
-      <div cdkDropList (cdkDropListDropped)="drop($event)" class="cards">
+        <div cdkDropList [cdkDropListAutoScrollStep]="10" (cdkDropListDropped)="drop($event)" class="cards">
 
-        <div class="card" *ngFor="let block of blocks; let i = index" cdkDrag (cdkDragMoved)="onDrag($event)"
-          [cdkDragDisabled]="openMenuIndex !== null" cdkDragLockAxis="y" (click)="openBlock(block.idBlockMusic)"
-          [class.open]="openMenuIndex === i">
+          <div class="card" *ngFor="let block of blocks; trackBy: trackById; let i = index" cdkDrag
+            [cdkDragDisabled]="openMenuIndex !== null" cdkDragLockAxis="y" cdkDragBoundary=".drag-boundary"
+            (click)="openBlock(block.idBlockMusic)" [class.open]="openMenuIndex === i">
 
 
-          <!-- Lápis -->
-          <div class="edit-icon" (click)="toggleMenu(i, $event)">
-            <i class="ph ph-pencil-simple-line"></i>
-          </div>
+            <!-- Lápis -->
+            <div class="edit-icon" (click)="toggleMenu(i, $event)">
+              <i class="ph ph-pencil-simple-line"></i>
+            </div>
 
-          <h3>{{ block.nameBlockMusic }}</h3>
-          <p>{{ block.musics?.length || block.idMusics?.length || 0 }} músicas</p>
+            <h3>{{ block.nameBlockMusic }}</h3>
+            <p>{{ block.musics?.length || block.idMusics?.length || 0 }} músicas</p>
 
-          <!-- Menu -->
-          <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
+            <!-- Menu -->
+            <div class="dropdown-menu" *ngIf="openMenuIndex === i" (click)="$event.stopPropagation()">
 
-            <!-- ABRIR -->
-            <button class="dropdown-item" (click)="openBlock(block.idBlockMusic, $event)">
-              <i class="ph ph-browser"></i> Abrir
-            </button>
+              <!-- ABRIR -->
+              <button class="dropdown-item" (click)="openBlock(block.idBlockMusic, $event)">
+                <i class="ph ph-browser"></i> Abrir
+              </button>
 
-            <!-- EDITAR -->
-            <button class="dropdown-item" (click)="openModal(true, block, $event)">
-              <i class="ph ph-pencil"></i> Editar
-            </button>
+              <!-- EDITAR -->
+              <button class="dropdown-item" (click)="openModal(true, block, $event)">
+                <i class="ph ph-pencil"></i> Editar
+              </button>
 
-            <!-- COPIAR LINK -->
-            <button class="dropdown-item" [class.copied]="copiedId === block.idBlockMusic"
-              (click)="copyLink(block.idBlockMusic, $event)">
-              <i class="ph" [class.ph-check-circle]="copiedId === block.idBlockMusic"
-                [class.ph-link]="copiedId !== block.idBlockMusic"></i>
-              {{ copiedId === block.idBlockMusic ? 'Link copiado!' : 'Copiar link' }}
-            </button>
+              <!-- COPIAR LINK -->
+              <button class="dropdown-item" [class.copied]="copiedId === block.idBlockMusic"
+                (click)="copyLink(block.idBlockMusic, $event)">
+                <i class="ph" [class.ph-check-circle]="copiedId === block.idBlockMusic"
+                  [class.ph-link]="copiedId !== block.idBlockMusic"></i>
+                {{ copiedId === block.idBlockMusic ? 'Link copiado!' : 'Copiar link' }}
+              </button>
 
-            <!-- EXCLUIR -->
-            <button class="dropdown-item delete" (click)="delete(block, $event)">
-              <i class="ph ph-trash"></i> Excluir
-            </button>
+              <!-- EXCLUIR -->
+              <button class="dropdown-item delete" (click)="delete(block, $event)">
+                <i class="ph ph-trash"></i> Excluir
+              </button>
+
+            </div>
 
           </div>
 
         </div>
-
       </div>
     </div>
 

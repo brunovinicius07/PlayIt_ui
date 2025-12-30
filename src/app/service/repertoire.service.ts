@@ -28,4 +28,7 @@ export class RepertoireService {
   delete(idRepertoire: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete/${idRepertoire}`, { responseType: 'text' as const });
   }
+  reorder(ids: number[]): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/reorder`, ids);
+  }
 }

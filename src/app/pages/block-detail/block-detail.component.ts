@@ -5,15 +5,34 @@ import { BlockMusicService } from '../../service/blockmusic.service';
 import { MusicService } from '../../service/music.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
+import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-block-detail',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, DragDropModule],
     templateUrl: './block-detail.component.html',
     styleUrls: ['./block-detail.component.scss']
 })
 export class BlockDetailComponent implements OnInit {
+
+    // ... (existing properties)
+
+    // DRAG AND DROP
+    drop(event: CdkDragDrop<any[]>) {
+        moveItemInArray(this.musics, event.previousIndex, event.currentIndex);
+
+        const orderedIds = this.musics.map(m => m.idUserMusic);
+        this.blockService.reorderBlockItems(this.idBlock, orderedIds).subscribe({
+            next: () => console.log('Músicas reordenadas no bloco'),
+            error: (err) => console.error('Erro ao reordenar músicas', err)
+        });
+    }
+
+    trackById(index: number, item: any): number {
+        return item.idUserMusic;
+    }
+
 
     idRepertoire!: number;
     idBlock!: number;

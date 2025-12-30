@@ -1,46 +1,21 @@
-<app-default-login-layout
-    title="Criar conta agora!"
-    primaryBtnText="Cadastrar Agora"
-    secondaryBtnText="Fazer Login"
-    (submit)="submit()"
-    (navigate)="navigate()"
-    [disablePrimaryBtn]="!signupForm.valid"
-
->
-  <form [formGroup]="signupForm" (keydown.enter)="submit()">
-    <app-primary-input
-          formControlName="nameUser"
-          inputName="nameUser"
-          type="email"
-          label="Seu Nome"
-          placeholder="Maria José"
-      >
-          <img src="/assets/svg/email-icon.svg"/>
-      </app-primary-input>
-      <app-primary-input
-          formControlName="email"
-          inputName="email"
-          type="email"
-          label="Email"
-          placeholder="maria@gmail.com"
-      >
-          <img src="/assets/svg/email-icon.svg"/>
-      </app-primary-input>
-      <app-primary-input
-          formControlName="password"
-          inputName="password"
-          type="password"
-          label="Sua Senha"
-      >
-          <img src="/assets/svg/password-icon.svg"/>
-      </app-primary-input>
-      <app-primary-input
-          formControlName="confirmNewPassword"
-          inputName="confirmNewPassword"
-          type="password"
-          label="Confirme sua Senha"
-      >
-          <img src="/assets/svg/password-icon.svg"/>
-      </app-primary-input>
-  </form>
+<app-default-login-layout title="Criar conta agora!" primaryBtnText="Cadastrar Agora" secondaryBtnText="Fazer Login"
+    (submit)="submit()" (navigate)="navigate()" [disablePrimaryBtn]="!signupForm.valid">
+    <form [formGroup]="signupForm" (keydown.enter)="submit()">
+        <app-primary-input formControlName="nameUser" inputName="nameUser" type="email" label="Seu Nome"
+            placeholder="Maria José">
+            <img src="/assets/svg/email-icon.svg" />
+        </app-primary-input>
+        <app-primary-input formControlName="email" inputName="email" type="email" label="Email"
+            placeholder="maria@gmail.com">
+            <img src="/assets/svg/email-icon.svg" />
+        </app-primary-input>
+        <app-primary-input formControlName="password" inputName="password" type="password" label="Sua Senha"
+            [enableValidation]="true">
+            <img src="/assets/svg/password-icon.svg" />
+        </app-primary-input>
+        <app-primary-input formControlName="confirmNewPassword" inputName="confirmNewPassword" type="password"
+            label="Confirme sua Senha" [enableValidation]="true">
+            <img src="/assets/svg/password-icon.svg" />
+        </app-primary-input>
+    </form>
 </app-default-login-layout>

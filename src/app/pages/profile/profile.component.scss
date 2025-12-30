@@ -118,6 +118,58 @@
       cursor: not-allowed;
     }
   }
+
+  /* Wrapper para input de senha com botão de olho */
+  .password-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f4f4f4;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    width: 100%;
+
+    input {
+      flex: 1;
+      background: transparent !important;
+      /* Force transparent inside wrapper */
+      padding: 12px 15px;
+      border: none;
+      border-radius: 8px 0 0 8px;
+      outline: none;
+      font-size: 15px;
+      min-width: 0;
+      /* Prevent flex overflow */
+    }
+
+    .eye-btn {
+      background: transparent;
+      border: none;
+      padding: 0 15px;
+      cursor: pointer;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  /* Validação Visual APENAS para novos campos */
+  .password-wrapper.validatable:has(input.ng-invalid) {
+    border: 1px solid #ff4444;
+  }
+
+  .password-wrapper.validatable:has(input.ng-valid.ng-dirty:not(:placeholder-shown)) {
+    border: 1px solid #00c851;
+  }
 }
 
 .password-toggle {

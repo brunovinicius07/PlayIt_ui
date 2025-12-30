@@ -100,31 +100,58 @@
 .list-container {
     width: 100%;
     max-width: 600px;
+    /* Maintain width constraint */
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 5px 40px 5px;
+    /* Adjusted padding */
+
+    /* Scrollbar */
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #2D2D44;
+        /* Cor do Card */
+        border-radius: 3px;
+
+        &:hover {
+            background: #6b00db;
+        }
+    }
+}
+
+/* New Wrapper for CDK Drop List to act as the Flex Layout connection */
+/* ===== DRAG & DROP STYLES ===== */
+
+.drag-boundary {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    /* Margin hack for top scroll triggering */
+    margin-top: -25px;
+    padding-top: 25px;
+
+    /* Layout constraints restored */
+    width: 100%;
+    max-width: 600px;
+}
+
+.drop-list-wrapper {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    flex: 1;
-    /* Match Music List */
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-bottom: 20px;
-    padding-right: 5px;
-    padding-top: 5px;
-    /* Added to prevent hover clipping */
-}
-
-/* Scrollbar Style from Music List */
-.list-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.list-container::-webkit-scrollbar-thumb {
-    background: #cfcfcf;
-    border-radius: 6px;
-}
-
-.list-container::-webkit-scrollbar-thumb:hover {
-    background: #b5b5b5;
+    width: 100%;
+    /* Fill list-container */
+    min-height: 100%;
+    /* Ensure drop area is full height */
 }
 
 .empty-state {

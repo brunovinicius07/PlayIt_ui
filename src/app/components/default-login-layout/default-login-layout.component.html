@@ -10,10 +10,7 @@
 
     <div class="btn-wrapper">
 
-      <button
-        class="btn-primary"
-        (click)="submit()"
-        [disabled]="disablePrimaryBtn">
+      <button class="btn-primary" (click)="submit()" [disabled]="disablePrimaryBtn" *ngIf="showPrimaryBtn">
 
         {{ primaryBtnText }}
       </button>
@@ -24,9 +21,7 @@
         <div></div>
       </div>
 
-      <button
-        class="btn-secondary"
-        (click)="navigate()">
+      <button class="btn-secondary" (click)="navigate()">
 
         {{ secondaryBtnText }}
       </button>

@@ -17,6 +17,8 @@
                 Buscar e Adicionar
             </button>
 
+
+
         </form>
     </div>
 
@@ -68,3 +70,13 @@
 
 <!-- OVERLAY BACKDROP -->
 <div class="menu-overlay" *ngIf="openMenuIndex !== null" (click)="openMenuIndex = null"></div>
+
+<!-- ERROR MODAL -->
+<div class="error-modal-overlay" *ngIf="errorMessage">
+    <div class="error-card">
+        <i class="ph ph-warning-circle"></i>
+        <h3>Ops! Algo deu errado</h3>
+        <p [innerHTML]="errorMessage"></p>
+        <button (click)="closeErrorModal()">Entendi</button>
+    </div>
+</div>

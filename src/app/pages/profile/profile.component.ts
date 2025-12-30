@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ProfileService } from '../../service/profile.service.ts.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -28,6 +28,11 @@ export class ProfileComponent implements OnInit {
   showImageModal = false;
   showDeleteModal = false;
 
+  // Visibility Flags
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
   idUser = localStorage.getItem("idUser");
   userName = localStorage.getItem("username") || "Usuário";
 
@@ -35,7 +40,7 @@ export class ProfileComponent implements OnInit {
     private profileService: ProfileService,
     private toast: ToastrService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -45,7 +50,7 @@ export class ProfileComponent implements OnInit {
       currentPassword: new FormControl(''),
       newPassword: new FormControl(''),
       confirmNewPassword: new FormControl('')
-    });
+    }, { validators: this.passwordMatchValidator });
 
     this.loadUserData();
 
@@ -54,15 +59,43 @@ export class ProfileComponent implements OnInit {
       this.showPasswordFields = v;
       this.editingPassword = v;
       this.updateWrapperMargin();
+
+      // Se desmarcar, limpa os campos de senha
+      if (!v) {
+        this.form.patchValue({
+          currentPassword: '',
+          newPassword: '',
+          confirmNewPassword: ''
+        });
+      }
     });
+  }
+
+  toggleCurrentPassword() { this.showCurrentPassword = !this.showCurrentPassword; }
+  toggleNewPassword() { this.showNewPassword = !this.showNewPassword; }
+  toggleConfirmPassword() { this.showConfirmPassword = !this.showConfirmPassword; }
+
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('newPassword')?.value;
+    const confirmPassword = control.get('confirmNewPassword')?.value;
+
+    if (password && password !== confirmPassword) {
+      control.get('confirmNewPassword')?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+      if (control.get('confirmNewPassword')?.hasError('passwordMismatch')) {
+        control.get('confirmNewPassword')?.setErrors(null);
+      }
+      return null;
+    }
   }
 
   /* =====================================
      Avatar só aparece se NÃO estiver alterando senha
   ====================================== */
   shouldShowAvatar(): boolean {
-  return !this.form.get("changePassword")?.value;
-}
+    return !this.form.get("changePassword")?.value;
+  }
 
   /* =====================================
      Atualiza posição do card
@@ -114,20 +147,34 @@ export class ProfileComponent implements OnInit {
   ====================================== */
   salvar() {
     if (this.form.invalid) {
-      this.toast.error("Preencha corretamente");
+      this.toast.error("Preencha corretamente, as novas senhas não coincidem");
       return;
     }
 
-    this.profileService.updateUser(this.idUser!, this.form.value).subscribe({
+    const payload = {
+      ...this.form.value,
+      isChangePassword: this.form.value.changePassword
+    };
+
+    this.profileService.updateUser(this.idUser!, payload).subscribe({
       next: () => {
         this.toast.success("Dados atualizados!");
+
+        // Atualiza localStorage para refletir mudança imediata na Dashboard
+        if (this.form.value.nameUser) {
+          localStorage.setItem('username', this.form.value.nameUser);
+        }
+
         this.editMode = false;
         this.editingPassword = false;
         this.showPasswordFields = false;
 
         this.updateWrapperMargin();
       },
-      error: () => this.toast.error("Erro ao atualizar")
+      error: (err) => {
+        const msg = err.error?.message || "Erro ao atualizar";
+        this.toast.error(msg);
+      }
     });
   }
 
