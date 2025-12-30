@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockMusicService } from '../../service/blockmusic.service';
@@ -120,50 +120,55 @@ export class BlockDetailComponent implements OnInit {
 
     // ...
 
+    @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
+    // ...
+
     // MENUS
     toggleMenu(index: number, event: MouseEvent) {
         event.stopPropagation();
 
         const card = (event.currentTarget as HTMLElement).closest('.music-card') as HTMLElement;
+        const container = this.scrollContainer?.nativeElement as HTMLElement;
+
         const isOpening = this.openMenuIndex !== index;
         this.openMenuIndex = isOpening ? index : null;
 
-        if (!isOpening || !card) return;
+        if (!isOpening || !card || !container) return;
 
         setTimeout(() => {
             const menu = card.querySelector('.dropdown-menu') as HTMLElement;
             if (!menu) return;
 
+            const containerRect = container.getBoundingClientRect();
             const menuRect = menu.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            const viewportTop = 0;
             const padding = 25;
 
-            // 1. Ajusta se escondido embaixo (Global)
-            if (menuRect.bottom > viewportHeight) {
-                const diff = menuRect.bottom - viewportHeight + padding;
-                window.scrollBy({ top: diff, behavior: 'smooth' });
+            // 1. Ajusta se escondido embaixo
+            if (menuRect.bottom > containerRect.bottom) {
+                const diff = menuRect.bottom - containerRect.bottom + padding;
+                container.scrollBy({ top: diff, behavior: 'smooth' });
             }
 
             // 2. Ajusta se escondido em cima
-            if (menuRect.top < viewportTop) {
-                const diff = viewportTop - menuRect.top + padding;
-                window.scrollBy({ top: -diff, behavior: 'smooth' });
+            if (menuRect.top < containerRect.top) {
+                const diff = containerRect.top - menuRect.top + padding;
+                container.scrollBy({ top: -diff, behavior: 'smooth' });
             }
 
             // 3. Ajuste para mostrar card inteiro
             const cardRect = card.getBoundingClientRect();
 
-            if (cardRect.bottom > viewportHeight) {
-                window.scrollBy({
-                    top: cardRect.bottom - viewportHeight + padding,
+            if (cardRect.bottom > containerRect.bottom) {
+                container.scrollBy({
+                    top: cardRect.bottom - containerRect.bottom + padding,
                     behavior: 'smooth'
                 });
             }
 
-            if (cardRect.top < viewportTop + 80) { // +80 por causa do header
-                window.scrollBy({
-                    top: -(viewportTop + 80 - cardRect.top + padding),
+            if (cardRect.top < containerRect.top) {
+                container.scrollBy({
+                    top: -(containerRect.top - cardRect.top + padding),
                     behavior: 'smooth'
                 });
             }

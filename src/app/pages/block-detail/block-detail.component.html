@@ -19,7 +19,7 @@
     <!-- CONTENT LIST -->
     <!-- Wrapper do Drag Boundary com margem negativa (Top Trick) -->
     <div class="drag-boundary">
-        <div class="list-container" cdkScrollable>
+        <div class="list-container" #scrollContainer cdkScrollable>
 
             <div cdkDropList [cdkDropListAutoScrollStep]="10" (cdkDropListDropped)="drop($event)"
                 class="drop-list-wrapper">
